@@ -9,3 +9,7 @@ export const GetUserInfo = () => {
 export const UpdateUserInfo = (data) => {
     return http.patch('/user', data, { headers: {'Authorization': localStorage.getItem('token')}})
 }
+
+export const UpdateUserPassWord = (data) => {
+    return http.patch('/user/pw', data, { headers: {'Authorization': localStorage.getItem('token')}})
+}
