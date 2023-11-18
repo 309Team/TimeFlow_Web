@@ -1,10 +1,7 @@
 <template>
-    <div>
-        <h1>CalendarView</h1>
-    </div>
+    <div></div>
 </template>
   
 <script>
 
 </script>
-  
