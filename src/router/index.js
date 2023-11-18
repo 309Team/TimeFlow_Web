@@ -1,10 +1,3 @@
-/*
- * @Description: 
- * @Author: Polister
- * @Date: 2023-11-18 01:27:51
- * @LastEditTime: 2023-11-18 09:37:06
- * @LastEditors: Polister
- */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import MainView from '../views/MainView.vue'
