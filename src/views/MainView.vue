@@ -12,7 +12,6 @@
                 </el-header>
 
                 <el-main>
-                    <h1>MAIN</h1>
                     <!-- 需要路由出口 -->
                     <router-view></router-view>
                 </el-main>
@@ -61,7 +60,6 @@ export default {
 .el-main {
     padding: 0;
     background-color: #aeb1b3;
-    color: #333;
-    text-align: center;
+    color: #333;    padding: 0;
 }
 </style>

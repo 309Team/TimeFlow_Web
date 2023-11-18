@@ -79,6 +79,7 @@ export default {
                 {
                     path: '/user',
                     name: 'user',
+                    
                 },
                 {
                     path: '/about',
