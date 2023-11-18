@@ -96,6 +96,7 @@ export default {
             }
             // // 面包屑
             // this.$store.commit('SelectMenu', item)
+            this.$store.commit('CollapseMenu')
         }
     },
     computed: {
