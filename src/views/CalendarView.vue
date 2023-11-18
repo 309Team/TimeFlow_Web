@@ -43,13 +43,13 @@ export default {
         }
     },
     components:{
-        
+
     },
     methods: {
         viewEvent(data) {
             // 通过此事件调用显示函数
             console.log(data);
-        }
+        }                                              
     }
 }
 
@@ -64,7 +64,8 @@ export default {
     padding: 0;
     border: 0;
     margin-left: 0px;
-    height: 88vh;
+    width: auto;
+    height: 100%;
 }
 
 .tags {

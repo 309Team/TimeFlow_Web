@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import MainView from '../views/MainView.vue'
-import Cookie from 'js-cookie'
 
 Vue.use(VueRouter)
 
@@ -68,14 +67,14 @@ const routes = [
 
 const router = new VueRouter({
   routes,
-//   mode: 'history',
+  mode: 'history',
 })
 
 
 // 路由守卫:全局前置导航守卫
 router.beforeEach((to, from, next) => {
 	// 获取token
-	const token = Cookie.get('token')
+	const token = localStorage.getItem('token')
 
 	// 若token不存在则 应当跳转至登录页面
 	if (!token && to.name !== 'Login') {
@@ -83,7 +82,7 @@ router.beforeEach((to, from, next) => {
 	}
 	// 若token存在则 不允许跳转至登录页面
 	else if (token && to.name === 'Login') {
-		alert(Cookie.get('token'))
+		alert(localStorage.getItem('token'))
 		next({ name: 'Home' })
 	} else {
 		next()
