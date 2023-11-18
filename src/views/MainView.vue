@@ -29,9 +29,7 @@ import SideBar from '../components/SideBar.vue'
 import HeadBar from '../components/HeadBar.vue'
 export default {
     data() {
-        return {
-
-        }
+        return {}
     },
     components: {
         SideBar,
@@ -61,6 +59,7 @@ export default {
 }
 
 .el-main {
+    padding: 0;
     background-color: #aeb1b3;
     color: #333;
     text-align: center;

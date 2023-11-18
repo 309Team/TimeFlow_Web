@@ -4,7 +4,7 @@ import axios from "axios";
 // 封装一个axios实例
 const http = axios.create({
     // 通用请求的地址前缀
-    baseURL: '',
+    baseURL: 'http://localhost:8080',
     // 超时时间，单位为毫秒
     timeout: 100000,
 
