@@ -61,7 +61,12 @@ export default {
                     // 后台请求异步，必须拿到token响应数据才能跳转
                     this.$router.push('/home')
                 } else {
-                    alert("登陆失败！")
+                    this.$message({
+                        showClose: true,
+                        message: '账号或密码错误',
+                        type: 'error'
+                    });
+
                 }
 
             })
