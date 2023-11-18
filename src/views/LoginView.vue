@@ -50,11 +50,22 @@ export default {
     methods: {
         submit() {
 
+
             LoginRequest(this.login_form).then(({ data }) => {
-                console.log(data)
-                Cookie.set('token',data.data.token)
+
+                if (data.code === 0) {
+                    // console.log(data)
+                    Cookie.set('token', data.data.token)
+                    // console.log(data.data.token)
+
+                    // 后台请求异步，必须拿到token响应数据才能跳转
+                    this.$router.push('/home')
+                } else {
+                    alert("登陆失败！")
+                }
+
             })
-            this.$router.push('/home')
+
 
         }
     }
