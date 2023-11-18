@@ -25,5 +25,5 @@ import http from '../utils/request.js'
 
 // 登录权限
 export const LoginRequest = (data) => {
-    return http.post('/login',data)
+    return http.post('/login', data)
 }
