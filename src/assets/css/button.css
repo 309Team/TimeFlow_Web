@@ -1,0 +1,49 @@
+.el-button--primary {
+	background-color: #67a2ab;
+	border-radius: 4px;
+	font-size: 16px;
+	border: 0;
+}
+
+.el-pagination {
+	position: absolute;
+	display: inline-block;
+	margin: 0 auto;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: #fafafa;
+	border: solid 1px #dfe8eb;
+	padding: 0 !important;
+
+	.el-pager {
+		margin: 0 !important;
+
+		.number {
+			color: #3d66e4 !important;
+			border-left: 1px solid #dfe8eb;
+			border-right: 1px solid #dfe8eb;
+			background-color: #fafafa !important;
+
+			&.active {
+				color: #fff !important;
+				background-color: #3d66e4 !important;
+				border: 1px solid #3d66e4 !important;
+			}
+		}
+	}
+}
+
+.el-pagination.is-background .btn-next,
+.el-pagination.is-background .btn-prev,
+.el-pagination.is-background .el-pager li {
+	margin: 0 !important;
+	background-color: #fafafa !important;
+}
+
+
+.el-checkbox__inner {
+	border: 1px solid #C0C0C0;
+	width: 16px;
+	height: 16px;
+	border-radius: 0;
+}

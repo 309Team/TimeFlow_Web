@@ -7,7 +7,7 @@ const http = axios.create({
     // 通用请求的地址前缀
     baseURL: 'http://localhost:8080',
     // 超时时间，单位为毫秒
-    timeout: 100000,
+    timeout: 10000,
 
 })
 
@@ -38,6 +38,14 @@ http.interceptors.response.use(function (response) {
     return response; 
 }, function (error) {
     // 对响应错误做什么
+
+    if (error.message.includes('timeout')) {
+        ElementUI.Message({
+            showClose: true,
+            message: '请求超时',
+            type: 'error'
+        });
+    }
     return Promise.reject(error);
 })
 
