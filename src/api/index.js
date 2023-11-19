@@ -27,3 +27,8 @@ import http from '../utils/request.js'
 export const LoginRequest = (data) => {
     return http.post('/login', data)
 }
+
+// 注册操作
+export const RegisterRequest = (data) => {
+    return http.post('/register', data)
+}
