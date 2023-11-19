@@ -41,7 +41,7 @@
         </el-form-item>
         <br />
         <el-form-item label="再次输入新密码">
-          <el-input v-model="newPassWord2" placeholder="请再次输入原密码" show-password></el-input>
+          <el-input v-model="newPassWord2" placeholder="请再次输入新密码" show-password></el-input>
         </el-form-item>
         <br />
         <el-form-item>
@@ -57,7 +57,7 @@
       <h4>注销用户</h4>
       <el-form :inline="true" @submit.native.prevent>
         <el-form-item label="密码">
-          <el-input v-model="passWord" placeholder="输入以验证为本人操作" show-password></el-input>
+          <el-input v-model="passWord" placeholder="输入密码以验证为本人操作" show-password></el-input>
         </el-form-item>
         <br />
         <el-form-item>
