@@ -15,6 +15,7 @@
 
     <!-- 修改用户名页面 -->
     <el-tab-pane label="修改用户名" name="editName">
+      <h4>修改用户名</h4>
       <el-form :inline="true" :model="newName" @keyup.enter.native="onSubmitNewName" @submit.native.prevent>
         <el-form-item label="新用户名">
           <el-input v-model="newName" placeholder="新用户名"></el-input>
@@ -29,6 +30,7 @@
 
     <!-- 修改密码页面 -->
     <el-tab-pane label="修改密码" name="editPassWord">
+      <h4>修改密码</h4>
       <el-form :inline="true" @keyup.enter.native="onSubmitNewPassWord" @submit.native.prevent>
         <el-form-item label="输入原密码">
           <el-input v-model="oldPassWord" placeholder="请输入原密码" show-password></el-input>
@@ -52,7 +54,19 @@
 
     <!-- 注销用户页面 -->
     <el-tab-pane label="注销用户" name="deleteUser">
-      <el-button type="danger" round style="margin: 15px" @onclick="onDeleteUser">注销用户</el-button>
+      <h4>注销用户</h4>
+      <el-form :inline="true" @submit.native.prevent>
+        <el-form-item label="密码">
+          <el-input v-model="passWord" placeholder="输入以验证为本人操作" show-password></el-input>
+        </el-form-item>
+        <br />
+        <el-form-item>
+          <el-popconfirm title='注销后无法找回数据，确认注销用户？' confirm-button-text='注销' cancel-button-text='取消' icon='el-icon-delete' icon-color='red' @confirm='onDeleteUser' @cancel='handleCancel'>
+            <el-button type="danger" round class="el-button" slot='reference'>确认注销</el-button>
+          </el-popconfirm>
+
+        </el-form-item>
+      </el-form>
       <el-alert title="注销用户将永远无法找回，请谨慎操作！" type="error" :closable="false">
       </el-alert>
     </el-tab-pane>
@@ -60,7 +74,7 @@
 </template>
 
 <script>
-import { GetUserInfo, UpdateUserInfo, UpdateUserPassWord } from '../api/user'
+import { GetUserInfo, UpdateUserInfo, UpdateUserPassWord, VerifyPassWord, DeleteUser } from '../api/user'
 export default {
   data() {
     return {
@@ -68,6 +82,7 @@ export default {
       data: {
         UserInfo: null
       },
+      passWord: null,
       oldPassWord: null,
       newPassWord: null,
       newPassWord2: null,
@@ -76,13 +91,18 @@ export default {
     }
   },
   created() {
+    // 打开页面时获取用户信息
     this.getUserInfo()
   },
   methods: {
-    handleClick(tab, event) {
-      console.log(tab, event)
-    },
 
+    handleCancel() {
+      this.$message({
+        type: 'info',
+        message: '已取消'
+      })
+    },
+    // 获取用户信息
     async getUserInfo() {
       GetUserInfo()
         .then(({ data }) => {
@@ -203,7 +223,66 @@ export default {
     },
 
     onDeleteUser() {
+      // this.$prompt('请输入密码以确定为本人操作', '注销用户', {
+      //   confirmButtonText: '注销',
+      //   cancelButtonText: '取消',
+      //   customClass: "delButton",
+      //   inputType: "password",
+      //   inputErrorMessage: '输入的密码错误！',
+      //   inputValidator: async (value) => {
+      //     const { data: data_1 }= await VerifyPassWord({
+      //       "passWord": value
+      //     })
+      //     console.log(data_1)
+      //     return data_1.code == 0
+      //   },
+      // }).then(({ value }) => {
+      //   this.$message({
+      //     type: 'success',
+      //     message: '注销成功，期待与你下次相遇' + value,
+      //   });
+      // }).catch(() => {
+      //   this.$message({
+      //     type: 'info',
+      //     message: '取消注销'
+      //   });
+      // });
+      if (this.passWord == null || this.passWord == "") {
+        this.$message({
+          showClose: true,
+          message: "请输入密码！",
+          type: 'error'
+        })
+        return;
+      }
 
+      DeleteUser({ "passWord": this.passWord }).then((({ data }) => {
+        if (data.code !== 0) {
+          this.$message({
+            showClose: true,
+            message: data.msg,
+            type: 'error'
+          })
+        } else {
+          this.$message({
+            type: 'success',
+            message: '注销成功，期待与你下次相遇',
+          });
+          localStorage.removeItem('token')
+          this.$router.push('/login')
+        }
+      }))
+    },
+
+    // 验证密码：value为传入的密码
+    verifyPassWord(value) {
+      console.log(value)
+      return VerifyPassWord({
+        "passWord": value
+      }).then(({ data }) => {
+        console.log(data)
+        return data.code == 0
+      })
     }
   }
 }
@@ -217,5 +296,11 @@ export default {
   left: 0;
   width: auto;
   height: 100%;
+}
+
+.delButton {
+  border-color: #ff0000;
+  background: #ff0000;
+  color: #fff;
 }
 </style>

@@ -7,23 +7,23 @@ const http = axios.create({
     // 通用请求的地址前缀
     baseURL: 'http://localhost:8080',
     // 超时时间，单位为毫秒
-    timeout: 10000,
+    timeout: 100000,
 
 })
 
 
 // 拦截器绑定在实例上
 // 请求拦截器
-http.interceptors.request.use(function (config) {
+http.interceptors.request.use(function(config) {
     // 在发送请求之前做什么
     return config;
-}, function (error) {
+}, function(error) {
     // 对请求错误做什么
     return Promise.reject(error);
 })
 
 // 添加响应拦截器
-http.interceptors.response.use(function (response) {
+http.interceptors.response.use(function(response) {
     // 对响应数据做什么
 
     if (response.data.code === 4) {
@@ -31,12 +31,12 @@ http.interceptors.response.use(function (response) {
         router.push('/login')
         ElementUI.Message({
             showClose: true,
-            message: '登录过期，请重新登录',
+            message: response.data.msg,
             type: 'error'
         });
     }
-    return response; 
-}, function (error) {
+    return response;
+}, function(error) {
     // 对响应错误做什么
 
     if (error.message.includes('timeout')) {
