@@ -5,6 +5,7 @@
                 <p :class="data.isSelected ? 'is-selected' : ''">
                     {{ data.day.split('-').slice(2).join("-") }}
                     <br>
+                    
                     <!-- 时段事项标签 -->
                     <el-tag class="tags" v-if="monthEvent[data.day] && monthEvent[data.day].tEvent > 0">
                         {{ monthEvent[data.day].tEvent }}
@@ -14,6 +15,8 @@
                     <el-tag class="tags" type="warning" v-if="monthEvent[data.day] && monthEvent[data.day].lEvent > 0">
                         {{ monthEvent[data.day].lEvent }}
                     </el-tag>
+
+
                     <!-- 时段事项标签 -->
                     <el-tag class="tags" type="danger" v-if="monthEvent[data.day] && monthEvent[data.day].mEvent > 0">
                         {{ monthEvent[data.day].lEvent }}

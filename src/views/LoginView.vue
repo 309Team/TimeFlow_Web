@@ -22,7 +22,7 @@
 <script>
 // import Cookie from 'js-cookie'
 import { LoginRequest } from '../api'
-import http from '@/utils/request'
+// import http from '@/utils/request'
 export default {
     data() {
         return {
@@ -56,7 +56,7 @@ export default {
                 if (data.code === 0) {
                     // console.log(data)
                     localStorage.setItem("token", data.data.token)
-                    http.defaults.headers['Authorization'] = localStorage.getItem('token')
+                    // http.defaults.headers['Authorization'] = localStorage.getItem('token')
                     console.log(data.data.token)
 
                     // 后台请求异步，必须拿到token响应数据才能跳转

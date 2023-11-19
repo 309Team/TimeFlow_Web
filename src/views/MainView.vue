@@ -42,12 +42,14 @@ export default {
     background-color: #B3C0D1;
     padding: 0;
     text-align: center;
+    height: 10vh;
 }
 
 .el-footer {
     background-color: #B3C0D1;
     color: #333;
     text-align: center;
+    height: 20vh;
 
 }
 
@@ -60,6 +62,9 @@ export default {
 .el-main {
     padding: 0;
     background-color: #aeb1b3;
-    color: #333;    padding: 0;
+    color: #333;
+    padding: 0;
+    height: 80vh;
+
 }
 </style>

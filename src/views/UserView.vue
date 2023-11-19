@@ -68,7 +68,12 @@ export default {
                 } else {
                     this.data.isEdited = true
                     this.getUserInfo()
-                    alert("修改成功")
+                    this.$message({
+                        showClose: true,
+                        message: '修改成功',
+                        type: 'success'
+                    });
+                    // alert("修改成功")
                     this.activeName = "first"
                 }
             })
@@ -90,7 +95,7 @@ export default {
     top: 0;
     left: 0;
     width: auto;
-    height: 100%;
+    height: 698px;
 }
 
 
