@@ -1,7 +1,6 @@
 <template>
   <div>
     <addDialog :addDialogVisible.sync="addDialogVisible"></addDialog>
-    <add-event-dialog></add-event-dialog>
     <el-button @click="open">添加事项</el-button>
   </div>
 </template>
