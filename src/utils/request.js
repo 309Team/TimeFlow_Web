@@ -1,6 +1,7 @@
 // 创建实例，并对外暴露，即可在外部使用
 import axios from "axios";
-
+import ElementUI from 'element-ui';
+import router from "@/router";
 // 封装一个axios实例
 const http = axios.create({
     // 通用请求的地址前缀
@@ -24,7 +25,17 @@ http.interceptors.request.use(function (config) {
 // 添加响应拦截器
 http.interceptors.response.use(function (response) {
     // 对响应数据做什么
-    return response;
+
+    if (response.data.code === 4) {
+        localStorage.removeItem('token')
+        router.push('/login')
+        ElementUI.Message({
+            showClose: true,
+            message: '登录过期，请重新登录',
+            type: 'error'
+        });
+    }
+    return response; 
 }, function (error) {
     // 对响应错误做什么
     return Promise.reject(error);

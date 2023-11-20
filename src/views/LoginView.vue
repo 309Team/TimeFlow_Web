@@ -1,5 +1,6 @@
 <template>
-    <el-form ref="form" class="login_container" :model="login_form" status-icon :rules="rules" label-width="70px">
+    <el-form ref="form" class="login_container" :model="login_form" status-icon :rules="rules" label-width="70px"
+        @keyup.enter.native="submit" @submit.native.prevent>
 
         <!-- h3要放在里面:只能有一个根,且title也是表单的一部分 -->
         <h3 class="login_title">用户登录</h3>
@@ -67,7 +68,6 @@ export default {
                         message: '账号或密码错误',
                         type: 'error'
                     });
-
                 }
 
             })
