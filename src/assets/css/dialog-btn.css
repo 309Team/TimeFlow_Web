@@ -1,0 +1,43 @@
+/* 修改 取消 按钮默认的边框颜色 */
+.dialog-btn .el-button:first-child {
+    border-color: #dcdfe6;
+}
+/* 修改 确认 按钮默认的边框颜色 */
+.dialog-btn .el-button:last-child {
+    background: #67a2ab;
+    border-color: #67a2ab;
+}
+/* 修改 取消 按钮悬浮时的边框色、背景色和文字颜色 */
+.dialog-btn .el-button:first-child:hover{
+    border-color: #dcdfe6;
+    background: #f5f7fa;
+    color: #131414;
+}
+/* 修改 确认 按钮悬浮时的边框色、背景色和文字颜色 */
+.dialog-btn .el-button:last-child:hover{
+    border-color: #67a2ab;
+    background: #67a2ab;
+    color: #fff;
+}
+/* 修改 取消 按钮点击时的边框色、背景色和文字颜色 */
+.dialog-btn .el-button:first-child:active{
+    border-color: #131414;
+    background: #fff;
+    color: #131414;
+}
+/* 修改 确认 按钮点击时的边框色、背景色和文字颜色 */
+.dialog-btn .el-button:last-child:active{
+    border-color: #67a2ab;
+    background: #67a2ab;
+    color: #fff;
+}
+
+/* 以下两个是修改右上角关闭图标 没有抽取到上面的类中 可以根据具体需要选择要不要抽取 */
+/* 修改 MessageBox 右上角关闭按钮 */
+.message-box__headerbtn:hover .el-icon-close {
+    color: #67a2ab;
+}
+/* 修改 Dialog 右上角关闭按钮 */
+.dialog__headerbtn:hover .el-dialog__close {
+   	color: #67a2ab;
+ }

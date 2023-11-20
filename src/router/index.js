@@ -60,14 +60,20 @@ const routes = [
 		path: '/login',
 		name: 'Login',
 		component: () => import('../views/LoginView.vue'),
+	},
+	{
+		// 注册路由
+		path: '/register',
+		name: 'Register',
+		component: () => import('../views/RegisterView.vue'),
 	}
 ]
 
 
 
 const router = new VueRouter({
-  routes,
-  mode: 'history',
+	routes,
+	mode: 'history',
 })
 
 
@@ -76,13 +82,16 @@ router.beforeEach((to, from, next) => {
 	// 获取token
 	const token = localStorage.getItem('token')
 
+
+
+
 	// 若token不存在则 应当跳转至登录页面
-	if (!token && to.name !== 'Login') {
+	if (!token && (to.name !== 'Login' && to.name !== 'Register')) {
 		next({ name: 'Login' })
 	}
 	// 若token存在则 不允许跳转至登录页面
-	else if (token && to.name === 'Login') {
-		alert(localStorage.getItem('token'))
+	else if (token && (to.name === 'Login' || to.name === 'Register')) {
+		//alert(localStorage.getItem('token'))
 		next({ name: 'Home' })
 	} else {
 		next()
