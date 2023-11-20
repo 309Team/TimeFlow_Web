@@ -50,7 +50,6 @@ export default {
     color: #333;
     text-align: center;
     height: 20vh;
-
 }
 
 .el-aside {
@@ -65,6 +64,5 @@ export default {
     color: #333;
     padding: 0;
     height: 80vh;
-
 }
 </style>

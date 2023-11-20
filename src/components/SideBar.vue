@@ -1,6 +1,5 @@
 <template>
-    <el-menu default-active="1-4-1" class="el-menu-vertical" @open="handleOpen" @close="handleClose"
-        :collapse="isCollapse" background-color="#eee" text-color="#000000" active-text-color="#67a2ab">
+    <el-menu default-active="1-4-1" class="el-menu-vertical" :collapse="isCollapse" background-color="#eee" text-color="#000000" active-text-color="#67a2ab">
 
         <h3>
             {{ isCollapse ? "TF" : "TimeFlow" }}
@@ -97,7 +96,9 @@ export default {
             }
             // // 面包屑
             // this.$store.commit('SelectMenu', item)
-            this.$store.commit('CollapseMenu')
+
+            
+            // this.$store.commit('CollapseMenu')
         }
     },
     computed: {

@@ -1,7 +1,7 @@
 import http from '../utils/request.js'
 
-// 获取用户信息
-export const GetDayEvent = (date) => {
+// 获取一天内的事项列表
+export const GetDayTEvent = (date) => {
     const path = "/event/te/" + date
-    return http.get(path, {headers: {'Authorization': localStorage.getItem('token')}}, )
+    return http.get(path, { headers: { 'Authorization': localStorage.getItem('token') } },)
 }

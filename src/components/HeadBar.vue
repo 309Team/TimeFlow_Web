@@ -6,10 +6,10 @@
             <el-button @click="handleMenu" icon="el-icon-s-fold" circle size="mini"></el-button>
 
             <!-- 面包屑 -->
-            <el-breadcrumb separator="/">
+            <!-- <el-breadcrumb separator="/">
                 <el-breadcrumb-item v-for="item in tags" :key="item.path" :to="{ path: item.path }">{{ item.label }}
                 </el-breadcrumb-item>
-            </el-breadcrumb>
+            </el-breadcrumb> -->
 
             <!-- <el-radio-group v-model="isCollapse" style="margin-bottom: 20px;">
                 <el-radio-button :label="false">展开</el-radio-button>
