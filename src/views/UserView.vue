@@ -75,6 +75,7 @@
 
 <script>
 import { GetUserInfo, UpdateUserInfo, UpdateUserPassWord, VerifyPassWord, DeleteUser } from '../api/user'
+import ElementUI from 'element-ui'
 export default {
   data() {
     return {
@@ -97,7 +98,7 @@ export default {
   methods: {
 
     handleCancel() {
-      this.$message({
+      ElementUI.Message({
         type: 'info',
         message: '已取消'
       })
@@ -107,7 +108,7 @@ export default {
       GetUserInfo()
         .then(({ data }) => {
           if (data.data === null) {
-            this.$message({
+            ElementUI.Message({
               showClose: true,
               message: '获取用户信息失败',
               type: 'error'
@@ -122,7 +123,7 @@ export default {
 
     onSubmitNewName() {
       if (this.newName == null) {
-        this.$message({
+        ElementUI.Message({
           showClose: false,
           message: '用户名不能为空',
           type: 'error'
@@ -142,14 +143,14 @@ export default {
           })
             .then(({ data }) => {
               if (data.code !== 0) {
-                this.$message({
+                ElementUI.Message({
                   showClose: true,
                   message: data.msg,
                   type: 'error'
                 })
               } else {
                 this.getUserInfo()
-                this.$message({
+                ElementUI.Message({
                   showClose: true,
                   message: '修改成功',
                   type: 'success'
@@ -163,7 +164,7 @@ export default {
             })
         })
         .catch(() => {
-          this.$message({
+          ElementUI.Message({
             type: 'info',
             message: '已取消'
           })
@@ -173,7 +174,7 @@ export default {
     onLogOut() {
       localStorage.removeItem('token')
       this.$router.push('/login')
-      this.$message({
+      ElementUI.Message({
         showClose: true,
         message: '已退出登录',
         type: 'success'
@@ -182,13 +183,13 @@ export default {
 
     onSubmitNewPassWord() {
       if (this.oldPassWord == null) {
-        this.$message({
+        ElementUI.Message({
           showClose: true,
           message: '请输入原密码!',
           type: 'error'
         })
       } else if (this.newPassWord != this.newPassWord2) {
-        this.$message({
+        ElementUI.Message({
           showClose: true,
           message: '两次密码不一致!',
           type: 'error'
@@ -200,14 +201,14 @@ export default {
         })
           .then(({ data }) => {
             if (data.code !== 0) {
-              this.$message({
+              ElementUI.Message({
                 showClose: true,
                 message: data.msg,
                 type: 'error'
               })
             } else {
               this.getUserInfo()
-              this.$message({
+              ElementUI.Message({
                 showClose: true,
                 message: '修改成功,请重新登录!',
                 type: 'success'
@@ -237,18 +238,18 @@ export default {
       //     return data_1.code == 0
       //   },
       // }).then(({ value }) => {
-      //   this.$message({
+      //   ElementUI.Message({
       //     type: 'success',
       //     message: '注销成功，期待与你下次相遇' + value,
       //   });
       // }).catch(() => {
-      //   this.$message({
+      //   ElementUI.Message({
       //     type: 'info',
       //     message: '取消注销'
       //   });
       // });
       if (this.passWord == null || this.passWord == "") {
-        this.$message({
+        ElementUI.Message({
           showClose: true,
           message: "请输入密码！",
           type: 'error'
@@ -258,13 +259,13 @@ export default {
 
       DeleteUser({ "passWord": this.passWord }).then((({ data }) => {
         if (data.code !== 0) {
-          this.$message({
+          ElementUI.Message({
             showClose: true,
             message: data.msg,
             type: 'error'
           })
         } else {
-          this.$message({
+          ElementUI.Message({
             type: 'success',
             message: '注销成功，期待与你下次相遇',
           });
@@ -275,14 +276,13 @@ export default {
     },
 
     // 验证密码：value为传入的密码
-    verifyPassWord(value) {
+    async verifyPassWord(value) {
       console.log(value)
-      return VerifyPassWord({
+      const { data: data_1 }=await VerifyPassWord({
         "passWord": value
-      }).then(({ data }) => {
-        console.log(data)
-        return data.code == 0
       })
+      console.log(data_1)
+      return data_1.code==0
     }
   }
 }

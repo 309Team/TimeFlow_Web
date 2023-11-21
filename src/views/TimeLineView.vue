@@ -10,7 +10,7 @@
             <el-timeline>
                 <el-timeline-item class="item" v-for="item in return_data" :key="item.id" :index="item.id">
 
-                    <div>{{ item.startTime }}</div>
+                    <div>{{ item.startTime.slice(11, 19) }}</div>
 
                     <el-card :body-style="{ padding: '15px' }" shadow="hover" @click.native=showdrawer(item)>
                         {{ item.name }}
@@ -36,7 +36,6 @@
             </el-drawer>
         </div>
 
-
         <div class="selecter-div">
             <div class="block">
                 <!-- <span class="demonstration">使用 value-format</span>
@@ -45,6 +44,12 @@
                     value-format="yyyy-MM-dd" @change=getTE()>
                 </el-date-picker>
             </div>
+        </div>
+
+        <div class="addEvent-div">
+            <addDialog :addDialogVisible.sync="addDialogVisible"></addDialog>
+            <add-event-dialog></add-event-dialog>
+            <el-button round @click="open">添加事项</el-button>
         </div>
 
     </container>
@@ -59,6 +64,7 @@ export default {
         return {
             return_data: [],
             drawer: false,
+            addDialogVisible: false,
 
             drawer_data: {
                 name: '',
@@ -68,6 +74,7 @@ export default {
                 text: '',
                 completed: ''
             },
+
             selecte_date: "",
             today: "",
 
@@ -78,8 +85,8 @@ export default {
     methods: {
         showdrawer(item) {
             this.drawer_data.name = item.name
-            this.drawer_data.startTime = item.startTime
-            this.drawer_data.overTime = item.overTime
+            this.drawer_data.startTime = item.startTime.slice(0, 9)
+            this.drawer_data.overTime = item.overTime.slice(0, 9)
             this.drawer_data.text = item.text
             this.drawer_data.completed = item.completed
 
@@ -92,6 +99,9 @@ export default {
                 this.return_data = data.data.data
                 console.log(this.return_data)
             })
+        },
+        open() {
+            this.addDialogVisible = true
         }
     },
     mounted() {
@@ -107,7 +117,10 @@ export default {
             console.log(this.return_data)
         })
     },
-    components: { Container }
+    components: {
+        Container,
+        addDialog: () => import("@/components/AddEventDialog.vue")
+    }
 }
 </script>   
 
@@ -119,12 +132,18 @@ export default {
 }
 
 .timeline-div {
-    height: 200px;
-    width: 250px;
+    height: auto;
+    width: 300px;
 }
 
 .selecter-div {
+    height: auto;
     padding: 10px;
+}
+
+.addEvent-div {
+    height: auto;
+    width: 110px;
 }
 
 .drawer-div-startTime {

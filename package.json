@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^1.6.2",
     "core-js": "^3.8.3",
+    "echarts": "^5.4.3",
     "element-ui": "^2.15.14",
     "install": "^0.13.0",
     "js-cookie": "^3.0.1",

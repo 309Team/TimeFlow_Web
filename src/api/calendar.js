@@ -9,3 +9,8 @@ export const GetMonthLabelEvent = (data) => {
 export const GetMonthMomentEvent = (data) => {
   return http.get('/event/me/month/' + data, { headers: { 'Authorization': localStorage.getItem('token') } })
 }
+
+// 获取当年每一月的标签事项数
+export const GetYearLabelEvent = (data) => {
+  return http.get('/event/le/year/' + data, { headers: { 'Authorization': localStorage.getItem('token') } })
+}

@@ -2,22 +2,22 @@
   <div>
     <el-container>
 
-      <el-aside width="auto">
-        <side-bar></side-bar>
-      </el-aside>
+            <el-aside class="el-aside" width="auto">
+                <side-bar></side-bar>
+            </el-aside>
 
-      <el-container>
-        <el-header height="40px">
-          <head-bar></head-bar>
-        </el-header>
+            <el-container>
+                <el-header class="el-header" height="40px">
+                    <head-bar></head-bar>
+                </el-header>
 
-        <el-main>
-          <!-- 需要路由出口 -->
-          <router-view></router-view>
-        </el-main>
+                <el-main class="el-main">
+                    <!-- 需要路由出口 -->
+                    <router-view></router-view>
+                </el-main>
 
-        <el-footer>Footer</el-footer>
-      </el-container>
+                <el-footer class="el-footer">Footer</el-footer>
+            </el-container>
 
     </el-container>
   </div>
