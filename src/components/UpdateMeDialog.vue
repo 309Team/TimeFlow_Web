@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="修改时刻事项" :visible.sync="visible">
+    <el-dialog @open="printME" title="时刻事项" :visible.sync="visible">
         <el-form>
 
             <el-form-item label="事项名称：" :label-width="formLabelWidth">
@@ -25,13 +25,14 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="visible = false">取 消</el-button>
-            <el-button type="primary" @click="SubmitPatchme">确 定</el-button>
+            <el-button type="primary" @click="SubmitPatchme">修 改</el-button>
+            <el-button type="danger" @click="Delete">删 除</el-button>
         </div>
     </el-dialog>
 </template>
 
 <script>
-import { PatchMe } from '../api/event';
+import { PatchMe,DeleteMe } from '../api/event';
 export default {
   name: 'updateMeDialog',
     data() {
@@ -60,9 +61,41 @@ export default {
         updateMeDialogVisible: {
             type: Boolean,
             default: true
+        },
+        dataME: {
+            type: Object,
+            default:null
         }
     },
     methods: {
+        printME() {
+                this.id=this.dataME.id;
+                this.setInViewPage=this.dataME.setInViewPage;
+                this.deadline=this.dataME.deadline;
+                this.isCompleted=this.dataME.isCompleted;
+                this.name=this.dataME.name;
+                this.text=this.dataME.text;
+        },
+        Delete() {
+            const data=this.dataME.id;
+            DeleteMe(data).then(({ data }) => {
+                if (data.code !== 0) {
+                    this.$message({
+                        showClose: true,
+                        message: data.msg,
+                        type: 'error'
+                    });
+                } else {
+                    this.$message({
+                        showClose: true,
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                    this.visible = false;
+                    this.$emit("updateData");
+                }
+            })
+        },
         SubmitPatchme() {
             const data = {
                 id: this.id,
@@ -86,6 +119,7 @@ export default {
                         type: 'success'
                     });
                     this.visible = false;
+                    this.$emit("updateData");
                 }
             })
         },

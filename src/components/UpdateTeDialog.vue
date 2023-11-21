@@ -1,5 +1,5 @@
 <template>
-    <el-dialog title="修改时段事项" :visible.sync="visible">
+    <el-dialog @open="printTE" title="时段事项" :visible.sync="visible">
         <el-form>
             <el-form-item label="事项名称：" :label-width="formLabelWidth">
                 <el-input v-model="name" autocomplete="off"></el-input>
@@ -29,20 +29,21 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click="visible = false">取 消</el-button>
-            <el-button type="primary" @click="SubmitPatchte">确 定</el-button>
+            <el-button type="primary" @click="SubmitPatchte">修 改</el-button>
+            <el-button type="danger" @click="Delete">删 除</el-button>
         </div>
     </el-dialog>
 </template>
 
 <script>
-import { PatchTe } from '../api/event';
+import { PatchTe,DeleteTe } from '../api/event';
 export default {
   name: 'updateTeDialog',
     data() {
         return {
-            id: '',
-            name: '',
-            text: '',
+            id: this.dataTE.id,
+            name: this.dataTE.name,
+            text: this.dataTE.text,
             startTime: '',
             overTime: '',
             setInViewPage: true,
@@ -65,9 +66,42 @@ export default {
         updateTeDialogVisible: {
             type: Boolean,
             default: true
+        },
+        dataTE: {
+            type: Object,
+            default:null
         }
     },
     methods: {
+        printTE() {
+                this.id=this.dataTE.id;
+                this.setInViewPage=this.dataTE.setInViewPage;
+                this.startTime=this.dataTE.startTime;
+                this.overTime=this.dataTE.overTime;
+                this.isCompleted=this.dataTE.isCompleted;
+                this.name=this.dataTE.name;
+                this.text=this.dataTE.text;
+        },
+        Delete() {
+            const data=this.dataTE.id;
+            DeleteTe(data).then(({ data }) => {
+                if (data.code !== 0) {
+                    this.$message({
+                        showClose: true,
+                        message: data.msg,
+                        type: 'error'
+                    });
+                } else {
+                    this.$message({
+                        showClose: true,
+                        message: '删除成功',
+                        type: 'success'
+                    });
+                    this.visible = false;
+                    this.$emit("updateData");
+                }
+            })
+        },
         SubmitPatchte() {
             const data = {
                 id: this.id,
@@ -92,6 +126,7 @@ export default {
                         type: 'success'
                     });
                     this.visible = false;
+                    this.$emit("updateData");
                 }
             })
         },
