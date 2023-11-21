@@ -1,22 +1,36 @@
 <template>
-  <div>
-    <t-calendar @cell-click="click" @month-change="changeMonth" @controller-change="changeMode">
+  <container class="page-container">
+    <t-select v-model="mode" class="mode-select-base">
+      <t-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label" />
+    </t-select>
+    <t-calendar :mode="mode" :month="month" :year="year" @cell-click="click" @month-change="changeMonth" @controller-change="changeMode" :controllerConfig="controllerConfig">
       <div slot="cell" slot-scope="data" class="outerWrapper">
         <div class="number">{{ displayNum(data) }}</div>
         <template>
           <div class="slotWrapper">
             <div v-if="data.mode === 'month'">
-              <div v-if="timeEvent[format(data.date)] && timeEvent[format(data.date)] > 0">
-                <span :class="momentTag"></span>
-                <el-tag type="primary">时段事项 {{ timeEvent[format(data.date)] }}</el-tag>
+              <div v-if="momentEvent[format(data.date)] && momentEvent[format(data.date)] > 0">
+                <el-tag size="small" class="tag" type="danger">时刻事项 {{ momentEvent[format(data.date)] }}</el-tag>
               </div>
               <div v-if="labelEvent[format(data.date)] && labelEvent[format(data.date)] > 0">
-                <el-tag type="warning">标签事项 {{ labelEvent[format(data.date)] }}</el-tag>
+                <el-tag size="small" class="tag" type="warning">标签事项 {{ labelEvent[format(data.date)] }}</el-tag>
+              </div>
+              <div v-if="timeEvent[format(data.date)] && timeEvent[format(data.date)] > 0">
+                <el-tag size="small" class="tag" type="primary">时段事项 {{ timeEvent[format(data.date)] }}</el-tag>
               </div>
             </div>
-            <div v-if="data.mode === 'year'">
-              <div v-if="labelEvent[formatMonth(data.date)] && labelEvent[formatMonth(data.date)] > 0">
-                <el-tag type="warning">标签事项 {{ labelEvent[formatMonth(data.date)] }}</el-tag>
+            <div :mode="mode" v-show="data.mode === 'year'">
+              <div>
+                <el-tag v-model="momentEventYear" v-show="momentEventYear[formatMonth(data.date)] && momentEventYear[formatMonth(data.date)] > 0" size="small" class="tag" type="danger">时刻事项
+                  {{ momentEventYear[formatMonth(data.date)] }}</el-tag>
+              </div>
+              <div>
+                <el-tag v-model="labelEventYear" v-show="labelEventYear[formatMonth(data.date)] && labelEventYear[formatMonth(data.date)] > 0" size="small" class="tag" type="warning">标签事项
+                  {{ labelEventYear[formatMonth(data.date)] }}</el-tag>
+              </div>
+              <div>
+                <el-tag v-model="timeEventYear" v-show="timeEventYear[formatMonth(data.date)] && timeEventYear[formatMonth(data.date)] > 0" size="small" class="tag" type="primary">时段事项
+                  {{ timeEventYear[formatMonth(data.date)] }}</el-tag>
               </div>
               <!-- 年视图该干的活 -->
             </div>
@@ -25,11 +39,37 @@
         </template>
       </div>
     </t-calendar>
+
+    <!-- 添加事项弹窗 -->
     <div>
       <addDialog :addDialogVisible.sync="addDialogVisible" :parentDate="parentDate"></addDialog>
       <!-- <el-button @click="addDialogVisible = true">添加事项</el-button> -->
     </div>
-  </div>
+
+    <!-- 抽屉组件 -->
+    <div>
+      <t-drawer :visible.sync="drawerVisible" :closeBtn="true" :size="drawerSize">
+        <template #header>
+          {{ nowDate + ' 事项'}}
+        </template>
+        <t-collapse expandMutex expandOnRowClick expandIcon defaultExpandAll>
+          <t-collapse-panel header="标签事项" v-if="labelEvent[nowDate]">
+            这部分是每个折叠面板折叠或展开的内容，可根据不同业务或用户的使用诉求，进行自定义填充。可以是纯文本、图文、子列表等内容形式。
+          </t-collapse-panel>
+          <t-collapse-panel header="时刻事项" v-if="momentEvent[nowDate]">
+            这部分是每个折叠面板折叠或展开的内容，可根据不同业务或用户的使用诉求，进行自定义填充。可以是纯文本、图文、子列表等内容形式。
+          </t-collapse-panel>
+          <t-collapse-panel header="时段事项" v-if="timeEvent[nowDate]">
+            这部分是每个折叠面板折叠或展开的内容，可根据不同业务或用户的使用诉求，进行自定义填充。可以是纯文本、图文、子列表等内容形式。
+          </t-collapse-panel>
+        </t-collapse>
+        <template #footer>
+          <t-button @click="visible = false">确定</t-button>
+          <t-button variant="outline" @click="visible = false">取消</t-button>
+        </template>
+      </t-drawer>
+    </div>
+  </container>
 
 </template>
 
@@ -37,7 +77,7 @@
 import '@/utils/dateFormat'
 import '@/api/calendar'
 import { formatDate } from '@/utils/dateFormat';
-import { GetMonthLabelEvent, GetMonthMomentEvent, GetYearLabelEvent } from '@/api/calendar';
+import { GetMonthLabelEvent, GetMonthMomentEvent, GetYearLabelEvent, GetYearMomentEvent } from '@/api/calendar';
 import ElementUI from 'element-ui';
 export default {
   mounted() {
@@ -46,15 +86,42 @@ export default {
   },
   data() {
     return {
-      curData: '',
-      labelTag: 'error',
-      momentTag: 'warning',
-      timeTag: 'success',
-      parentDate: new Date(),
-      addDialogVisible: false,
+      // 日历月历切换按钮
+      options: [
+        { value: 'month', label: '日历' },
+        { value: 'year', label: '月历' },
+      ],
+
+      // 以下为日历组件所用
+      controllerConfig: {
+        mode: {
+          visable: false
+        }
+      }, // controller控制
+      mode: 'month', // 模式(月历、日历)
+      month: new Date().getMonth() + 1, // 日历显示的月份
+      year: new Date().getFullYear(), // 日历显示的年份
+      parentDate: new Date(), // 选中的日期
+
+      addDialogVisible: false, // 是否显示添加组件
+
+      // 月份事项数
       timeEvent: {},
       labelEvent: {},
       momentEvent: {},
+
+      // 年份事项数
+      timeEventYear: {},
+      labelEventYear: {},
+      momentEventYear: {},
+
+      // 以下为抽屉参数
+      drawerVisible: false, // 抽屉是否显示
+      drawerSize: 'medium',
+      nowDate: formatDate(new Date()), // 现在选中的日期
+      nowTimeEvent: [], // 当天的时段事项
+      nowMomentEvent: [], // 当天的时刻事项
+      nowLabalEvent: [] // 当天的标签事项
     };
   },
   components: {
@@ -70,19 +137,39 @@ export default {
       return data.getMonth() + 1
     },
     click(options) {
-      //alert(options.cell.formattedDate);
-      this.parentDate = options.cell.date
-      this.addDialogVisible = true
+      // 为年视图时，点击切换为月视图
+      if (this.mode == 'year') {
+        this.year = options.cell.date.getFullYear()
+        this.month = options.cell.date.getMonth() + 1
+        this.mode = 'month'
+        return
+      } else {
+        if (!this.timeEvent[options.cell.formattedDate] && !this.momentEvent[options.cell.formattedDate] && !this.labelEvent[options.cell.formattedDate]) {
+          this.parentDate = options.cell.date
+          this.addDialogVisible = true
+        } else {
+          this.nowDate = formatDate(options.cell.date)
+          this.drawerVisible = true
+        }
+      }
+
+
     },
     changeMonth(options) {
+
       let newDate = new Date(options.year + '-' + options.month)
-      this.updateMonthData(newDate)
+
+      if (this.mode === 'month') {
+        this.updateMonthData(newDate)
+      } else {
+        this.updateYearData(newDate)
+      }
+
     },
     changeMode(options) {
       if (options.mode === 'month') {
         this.updateMonthData(options.filterDate)
       } else {
-
         this.updateYearData(options.filterDate)
       }
     },
@@ -115,7 +202,7 @@ export default {
         })
     },
 
-    // 获取当月每天的时段事项数
+    // 获取当月每天的时刻事项数
     getMonthMomentEvent(data) {
       let date = formatDate(data)
       //console.log(date);
@@ -141,6 +228,7 @@ export default {
       console.log(data)
     },
 
+    // 获取当年每月的标签事项数
     getYearLabelEvent(data) {
       let date = formatDate(data)
       console.log(date);
@@ -152,8 +240,25 @@ export default {
             type: 'error'
           })
         } else {
-          this.labelEvent = data.data
+          this.labelEventYear = data.data
           console.log(data.data);
+        }
+      })
+    },
+
+    // 获取当年每月的时刻事项数
+    getYearMomentEvent(data) {
+      let date = formatDate(data)
+      console.log(date);
+      GetYearMomentEvent(date).then(({ data }) => {
+        if (data.code !== 0 && data.code !== 4) {
+          ElementUI.Message({
+            showClose: false,
+            message: '获取标签事项信息失败',
+            type: 'error'
+          })
+        } else {
+          this.momentEventYear = data.data
         }
       })
     },
@@ -169,6 +274,7 @@ export default {
     updateYearData(date) {
       console.log(date);
       this.getYearLabelEvent(date)
+      this.getYearMomentEvent(date)
     },
 
 
@@ -177,6 +283,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.page-container {
+  padding: 40px;
+}
+.mode-select-base {
+  width: 200px;
+  display: inline-block;
+  margin: 10px 10px 0 0;
+}
 .outerWrapper {
   width: 100%;
   height: 100%;
@@ -221,6 +335,9 @@ export default {
     position: absolute;
     bottom: 2px;
     left: 5px;
+    .tag {
+      margin: 5px;
+    }
   }
 }
 </style>
