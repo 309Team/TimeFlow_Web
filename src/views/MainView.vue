@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <el-container>
+  <div>
+    <el-container>
 
             <el-aside class="el-aside" width="auto">
                 <side-bar></side-bar>
@@ -19,50 +19,47 @@
                 <el-footer class="el-footer">Footer</el-footer>
             </el-container>
 
-        </el-container>
-    </div>
+    </el-container>
+  </div>
 </template>
   
 <script>
 import SideBar from '../components/SideBar.vue'
 import HeadBar from '../components/HeadBar.vue'
 export default {
-    data() {
-        return {}
-    },
-    components: {
-        SideBar,
-        HeadBar
-    }
+  data() {
+    return {}
+  },
+  components: {
+    SideBar,
+    HeadBar
+  }
 }
 </script>
   
 <style scoped>
 .el-header {
-    background-color: #B3C0D1;
-    padding: 0;
-    text-align: center;
-    height: 10vh;
+  background-color: #b3c0d1;
+  padding: 0;
+  text-align: center;
 }
 
 .el-footer {
-    background-color: #B3C0D1;
-    color: #333;
-    text-align: center;
-    height: 20vh;
+  background-color: #b3c0d1;
+  color: #333;
+  text-align: center;
 }
 
 .el-aside {
-    background-color: #D3DCE6;
-    color: #333;
-    min-height: 100vh;
+  background-color: #d3dce6;
+  color: #333;
+  min-height: 100vh;
 }
 
 .el-main {
-    padding: 0;
-    background-color: #aeb1b3;
-    color: #333;
-    padding: 0;
-    height: 80vh;
+  padding: 0;
+  background-color: #fff;
+  color: #333;
+  padding: 0;
 }
 </style>

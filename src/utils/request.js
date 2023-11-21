@@ -8,7 +8,6 @@ const http = axios.create({
     baseURL: 'http://localhost:8080',
     // 超时时间，单位为毫秒
     timeout: 100000,
-
 })
 
 
@@ -28,7 +27,8 @@ http.interceptors.response.use(function(response) {
 
     if (response.data.code === 4) {
         localStorage.removeItem('token')
-        router.push('/login')
+        if (router.app.$route.name != 'Login')
+            router.push('/login')
         ElementUI.Message({
             showClose: true,
             message: response.data.msg,
@@ -45,6 +45,7 @@ http.interceptors.response.use(function(response) {
             message: '请求超时',
             type: 'error'
         });
+        return { data: { code: 4 } }
     }
     return Promise.reject(error);
 })
