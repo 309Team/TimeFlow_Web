@@ -1,11 +1,11 @@
 <template>
     <div class="calender" style="padding: 0 0; border: 0;">
-        <el-calendar v-model="value">
+        <el-calendar v-model="now_date">
             <div slot="dateCell" slot-scope="{data}" @click="viewEvent(data)">
                 <p :class="data.isSelected ? 'is-selected' : ''">
                     {{ data.day.split('-').slice(2).join("-") }}
                     <br>
-                    
+                     
                     <!-- 时段事项标签 -->
                     <el-tag class="tags" v-if="monthEvent[data.day] && monthEvent[data.day].tEvent > 0">
                         {{ monthEvent[data.day].tEvent }}
@@ -26,14 +26,14 @@
         </el-calendar>
     </div>
 </template>
-  
+
 <script>
 
 
 export default {
     data() {
         return {
-            value: new Date(),
+            now_date: new Date(),
             monthEvent: {
                 "2023-11-18": {
                     mEvent: 10,

@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" class="register_container" :model="register_form" status-icon :rules="rules" label-width="70px" @keyup.enter.native="submit" @submit.native.prevent>
+  <el-form ref="form" class="register_container" :model="register_form" status-icon :rules="rules" label-width="80px" @keyup.enter.native="submit" @submit.native.prevent>
 
     <h3 class="register_title">用户注册</h3>
 
@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { RegisterRequest } from '../api'
+import { RegisterRequest } from '../api/Login_Register'
 export default {
   data() {
     return {
@@ -142,4 +142,5 @@ export default {
     margin-left: 60px;
   }
 }
+
 </style>

@@ -2,21 +2,21 @@
     <div>
         <el-container>
 
-            <el-aside width="auto">
+            <el-aside class="el-aside" width="auto">
                 <side-bar></side-bar>
             </el-aside>
 
             <el-container>
-                <el-header height="40px">
+                <el-header class="el-header" height="40px">
                     <head-bar></head-bar>
                 </el-header>
 
-                <el-main>
+                <el-main class="el-main">
                     <!-- 需要路由出口 -->
                     <router-view></router-view>
                 </el-main>
 
-                <el-footer>Footer</el-footer>
+                <el-footer class="el-footer">Footer</el-footer>
             </el-container>
 
         </el-container>

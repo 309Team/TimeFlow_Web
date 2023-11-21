@@ -1,5 +1,5 @@
 <template>
-  <el-form ref="form" class="login_container" :model="login_form" status-icon :rules="rules" label-width="70px" @keyup.enter.native="submit" @submit.native.prevent>
+  <el-form ref="form" class="login_container" :model="login_form" status-icon :rules="rules" label-width="80px" @keyup.enter.native="submit" @submit.native.prevent>
 
     <!-- h3要放在里面:只能有一个根,且title也是表单的一部分 -->
     <h3 class="login_title">用户登录</h3>
@@ -22,7 +22,7 @@
 
 <script>
 // import Cookie from 'js-cookie'
-import { LoginRequest } from '../api'
+import { LoginRequest } from '../api/Login_Register'
 // import http from '@/utils/request'
 export default {
   data() {
@@ -60,7 +60,7 @@ export default {
         if (data.code === 0) {
           // console.log(data)
           localStorage.setItem("token", data.data.token)
-          http.defaults.headers['Authorization'] = localStorage.getItem('token')
+          // http.defaults.headers['Authorization'] = localStorage.getItem('token')
           console.log(data.data.token)
 
           // 后台请求异步，必须拿到token响应数据才能跳转
@@ -83,7 +83,7 @@ export default {
 
 <style lang="less" scoped>
 .login_container {
-  width: 350px;
+  width: 400px;
   border: 3px solid #eaeaea;
 
   // 居中
