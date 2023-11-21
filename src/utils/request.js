@@ -45,7 +45,7 @@ http.interceptors.response.use(function(response) {
             message: '请求超时',
             type: 'error'
         });
-        return { data: { code: 1 } }
+        return { data: { code: 4 } }
     }
     return Promise.reject(error);
 })
