@@ -23,7 +23,7 @@
 <script>
 // import Cookie from 'js-cookie'
 import { LoginRequest } from '../api'
-import http from '@/utils/request'
+// import http from '@/utils/request'
 export default {
   data() {
     return {

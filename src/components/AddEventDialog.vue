@@ -39,7 +39,7 @@
               <el-date-picker type="datetime" placeholder="选择日期时间" v-model="deadline" style="width: 100%;"></el-date-picker>
             </el-form-item>
             <el-form-item label="是否完成：" :label-width="formLabelWidth">
-              <el-switch v-model="isCompleted"></el-switch>
+              <el-switch v-model="isFinished"></el-switch>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -81,11 +81,11 @@ export default {
       name: '',
       text: '',
       deadline: '',
-      startTime: '',
+      startTime: this.parentDate,
       overTime: '',
       attachDate: '',
       setInViewPage: true,
-      isCompleted: false,
+      isCompleted: true,
       formLabelWidth: '120px',
       activeName: 'timeEvent',
     };
@@ -104,9 +104,34 @@ export default {
     addDialogVisible: {
       type: Boolean,
       default: true
+    },
+    parentDate: {
+      type: Object,
+      default: new Date()
+    }
+  },
+  watch: {
+    addDialogVisible: {
+      handler() {
+        this.name = '';
+        this.text = '';
+        this.overTime = '';
+        this.deadline = this.parentDate;
+        this.attachDate = this.parentDate;
+        this.startTime = this.parentDate;
+        this.isCompleted = false;
+        this.setInViewPage = true;
+      }
     }
   },
   methods: {
+
+    openDialog() {
+      this.visable = true;
+      this.deadline = this.parentDate;
+      this.attachDate = this.parentDate;
+      this.startTime = this.parentDate;
+    },
 
     OnSubmit() {
       if (this.activeName == 'timeEvent') {
@@ -118,16 +143,18 @@ export default {
       }
     },
     SubmitTe() {
-      const data = {
+
+      const data1 = {
         id: this.id,
         name: this.name,
         text: this.text,
         startTime: this.startTime,
         overTime: this.overTime,
         setInViewPage: this.setInViewPage,
-        isCompleted: this.isCompleted,
+        isFinished: this.isCompleted,
       }
-      PostTe(data).then(({ data }) => {
+      console.log(data1);
+      PostTe(data1).then(({ data }) => {
         if (data.code !== 0) {
           this.$message({
             showClose: true,
@@ -151,7 +178,7 @@ export default {
         text: this.text,
         deadline: this.deadline,
         setInViewPage: this.setInViewPage,
-        isCompleted: this.isCompleted,
+        isFinished: this.isFinished,
       }
       PostMe(data).then(({ data }) => {
         if (data.code !== 0) {
@@ -177,8 +204,10 @@ export default {
         text: this.text,
         attachDate: this.attachDate,
         setInViewPage: this.setInViewPage,
-        isCompleted: this.isCompleted,
+        // isFinished: !this.isFinished,
+        isFinished: this.isFinished,
       }
+      // console.log(data)
       PostLe(data).then(({ data }) => {
         if (data.code !== 0) {
           this.$message({

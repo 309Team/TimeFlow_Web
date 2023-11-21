@@ -1,74 +1,34 @@
-<template>
-    <div class="calender" style="padding: 0 0; border: 0;">
-        <el-calendar v-model="value">
-            <div slot="dateCell" slot-scope="{data}" @click="viewEvent(data)">
-                <p :class="data.isSelected ? 'is-selected' : ''">
-                    {{ data.day.split('-').slice(2).join("-") }}
-                    <br>
-                    <!-- 时段事项标签 -->
-                    <el-tag class="tags" v-if="monthEvent[data.day] && monthEvent[data.day].tEvent > 0">
-                        {{ monthEvent[data.day].tEvent }}
-                    </el-tag>
 
-                    <!-- 标签事项标签 -->
-                    <el-tag class="tags" type="warning" v-if="monthEvent[data.day] && monthEvent[data.day].lEvent > 0">
-                        {{ monthEvent[data.day].lEvent }}
-                    </el-tag>
-                    <!-- 时段事项标签 -->
-                    <el-tag class="tags" type="danger" v-if="monthEvent[data.day] && monthEvent[data.day].mEvent > 0">
-                        {{ monthEvent[data.day].lEvent }}
-                    </el-tag>
-                </p>
-            </div>
-        </el-calendar>
-    </div>
+  <template>
+  <t-space direction="vertical" class="x">
+    <t-select v-model="mode" class="demo-select-base">
+      <t-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label" />
+    </t-select>
+    <t-calendar :mode="mode"></t-calendar>
+  </t-space>
 </template>
-  
 <script>
-
-
 export default {
-    data() {
-        return {
-            value: new Date(),
-            monthEvent: {
-                "2023-11-18": {
-                    mEvent: 10,
-                    lEvent: 5,
-                    tEvent: 3,
-                },
-
-            }
-
-        }
-    },
-    components:{
-
-    },
-    methods: {
-        viewEvent(data) {
-            // 通过此事件调用显示函数
-            console.log(data);
-        }                                              
-    }
-}
-
-
+  data() {
+    return {
+      mode: 'year',
+      options: [
+        { value: 'month', label: '日历' },
+        { value: 'year', label: '月历' },
+      ],
+    };
+  },
+};
 </script>
 
 <style scoped>
-.container {
-    /* height: 100vh; */
-    /* flex: auto; */
-    /* margin: 0; */
-    padding: 0;
-    border: 0;
-    margin-left: 0px;
-    width: auto;
-    height: 100%;
+.demo-select-base {
+  width: 200px;
+  display: inline-block;
+  margin: 0 10px 0 0;
 }
 
-.tags {
-    margin: 5px;
+.x {
+  height: 500px;
 }
 </style>

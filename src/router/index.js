@@ -82,9 +82,6 @@ router.beforeEach((to, from, next) => {
 	// 获取token
 	const token = localStorage.getItem('token')
 
-
-
-
 	// 若token不存在则 应当跳转至登录页面
 	if (!token && (to.name !== 'Login' && to.name !== 'Register')) {
 		next({ name: 'Login' })
