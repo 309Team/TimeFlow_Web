@@ -5,8 +5,14 @@ export function formatDateTime(timer) {
   const day = timer.getDate()
   const hour = timer.getHours()
   const minute = timer.getMinutes()
-  const second = timer.getSeconds()
-  return `${pad(year, 4)}-${pad(month)}-${pad(day)} ${pad(hour)}:${pad(minute)}:${pad(second)}`
+  return `${pad(year, 4)}-${pad(month)}-${pad(day)} ${pad(hour)}:${pad(minute)}`
+}
+
+// 格式化日期时间 "20:36"
+export function formatTimeHHMM(timer) {
+  const hour = timer.getHours()
+  const minute = timer.getMinutes()
+  return `${pad(hour)}:${pad(minute)}`
 }
 
 // 格式化日期 "2023-11-21"

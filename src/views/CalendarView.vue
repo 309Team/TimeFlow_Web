@@ -46,6 +46,13 @@
       <!-- <el-button @click="addDialogVisible = true">添加事项</el-button> -->
     </div>
 
+    <!-- 修改标签事项弹窗 -->
+    <div>
+      <updateLEDialog :updateLeDialogVisible.sync="LEVisable" :dataLE="chooseEvent" @updateData="updateAll" />
+      <updateMEDialog :updateMeDialogVisible.sync="MEVisable" :dataME="chooseEvent" @updateData="updateAll" />
+      <updateTEDialog :updateTeDialogVisible.sync="TEVisable" :dataME="chooseEvent" @updateData="updateAll" />
+    </div>
+
     <!-- 抽屉组件 -->
     <div>
       <t-drawer :visible.sync="drawerVisible" :closeBtn="true" :size="drawerSize">
@@ -53,19 +60,50 @@
           {{ nowDate + ' 事项'}}
         </template>
         <t-collapse expandMutex expandOnRowClick expandIcon defaultExpandAll>
-          <t-collapse-panel header="标签事项" v-if="labelEvent[nowDate]">
-            这部分是每个折叠面板折叠或展开的内容，可根据不同业务或用户的使用诉求，进行自定义填充。可以是纯文本、图文、子列表等内容形式。
+          <t-collapse-panel header="标签事项" v-if="labelEvent[nowDate]" v-model="nowLabalEvent">
+            <br>
+            <div v-for="item of nowLabalEvent" :key="item.name">
+              <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                  <span>{{ item.name }}</span>
+                  <el-button style="float: right; padding: 3px 3px" type="text" @click="clickDeleteLE(item)">删除</el-button>
+                  <el-button style="float: right; padding: 3px 0" type="text" @click="clickUpdateLE(item)">编辑</el-button>
+                </div>
+                <div>{{ item.text ? item.text : '暂无备注' }}</div>
+              </el-card>
+            </div>
           </t-collapse-panel>
           <t-collapse-panel header="时刻事项" v-if="momentEvent[nowDate]">
-            这部分是每个折叠面板折叠或展开的内容，可根据不同业务或用户的使用诉求，进行自定义填充。可以是纯文本、图文、子列表等内容形式。
+            <br>
+            <div v-for="item of nowMomentEvent" :key="item.id">
+              <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                  <span>{{ item.name }}</span>
+                  <el-tag type="danger" size="small" style="margin: 10px"> {{formatHHMM(item.deadline)}}</el-tag>
+                  <el-button style="float: right; padding: 3px 3px" type="text" @click="clickDeleteME(item)">删除</el-button>
+                  <el-button style="float: right; padding: 3px 0" type="text" @click="clickUpdateME(item)">编辑</el-button>
+                </div>
+                <div>{{ item.text ? item.text : '暂无备注' }}</div>
+              </el-card>
+            </div>
           </t-collapse-panel>
           <t-collapse-panel header="时段事项" v-if="timeEvent[nowDate]">
-            这部分是每个折叠面板折叠或展开的内容，可根据不同业务或用户的使用诉求，进行自定义填充。可以是纯文本、图文、子列表等内容形式。
+            <br>
+            <div v-for="item of nowTimeEvent" :key="item.id">
+              <el-card class="box-card">
+                <div slot="header" class="clearfix">
+                  <span>{{ item.name }}</span>
+                  <el-tag type="primary" size="small" style="margin: 10px"> {{format(item.startTime)}} - {{format(item.overTime)}}</el-tag>
+                  <el-button style="float: right; padding: 3px 3px" type="text" @click="clickDeleteTE(item)">删除</el-button>
+                  <el-button style="float: right; padding: 3px 0" type="text" @click="clickUpdateTE(item)">编辑</el-button>
+                </div>
+                <div>{{ item.text ? item.text : '暂无备注' }}</div>
+              </el-card>
+            </div>
           </t-collapse-panel>
         </t-collapse>
         <template #footer>
-          <t-button @click="visible = false">确定</t-button>
-          <t-button variant="outline" @click="visible = false">取消</t-button>
+          <t-button @click="addDialogVisible = true">添加事项</t-button>
         </template>
       </t-drawer>
     </div>
@@ -76,8 +114,9 @@
 <script>
 import '@/utils/dateFormat'
 import '@/api/calendar'
-import { formatDate } from '@/utils/dateFormat';
+import { formatDate, formatDateTime, formatTimeHHMM } from '@/utils/dateFormat';
 import { GetMonthLabelEvent, GetMonthMomentEvent, GetYearLabelEvent, GetYearMomentEvent } from '@/api/calendar';
+import { GetLe, GetMe, GetTe } from '@/api/event'
 import ElementUI from 'element-ui';
 export default {
   mounted() {
@@ -101,9 +140,22 @@ export default {
       mode: 'month', // 模式(月历、日历)
       month: new Date().getMonth() + 1, // 日历显示的月份
       year: new Date().getFullYear(), // 日历显示的年份
+
+      // 以下为对话框参数
+      chooseEvent: {}, // 选择的事项
       parentDate: new Date(), // 选中的日期
 
+      // 添加组件
       addDialogVisible: false, // 是否显示添加组件
+
+      // 修改标签事项组件
+      LEVisable: false, // 是否显示修改标签事项组件
+
+      // 修改时刻事项组件
+      MEVisable: false, // 是否显示修改时刻事项组件
+
+      // 修改时段事项组件
+      TEVisable: false, // 是否显示修改时段事项组件
 
       // 月份事项数
       timeEvent: {},
@@ -117,7 +169,7 @@ export default {
 
       // 以下为抽屉参数
       drawerVisible: false, // 抽屉是否显示
-      drawerSize: 'medium',
+      drawerSize: 'medium', // 抽屉大小
       nowDate: formatDate(new Date()), // 现在选中的日期
       nowTimeEvent: [], // 当天的时段事项
       nowMomentEvent: [], // 当天的时刻事项
@@ -126,6 +178,9 @@ export default {
   },
   components: {
     addDialog: () => import("@/components/AddEventDialog.vue"),
+    updateLEDialog: () => import("@/components/UpdateLeDialog.vue"),
+    updateMEDialog: () => import("@/components/UpdateMeDialog.vue"),
+    updateTEDialog: () => import("@/components/UpdateTeDialog.vue"),
   },
   methods: {
     // 格式化日期为天
@@ -136,6 +191,18 @@ export default {
     formatMonth(data) {
       return data.getMonth() + 1
     },
+
+    // 格式化为 "2023-11-11 20:11:20"
+    formatDateAndTime(data) {
+      return formatDateTime(new Date(data))
+    },
+
+    // 格式化为 "20:11"
+    formatHHMM(data) {
+      return formatTimeHHMM(new Date(data))
+    },
+
+
     click(options) {
       // 为年视图时，点击切换为月视图
       if (this.mode == 'year') {
@@ -149,12 +216,13 @@ export default {
           this.addDialogVisible = true
         } else {
           this.nowDate = formatDate(options.cell.date)
+          this.updateDayData(options.cell.date)
           this.drawerVisible = true
         }
       }
-
-
     },
+
+    // 切换年/月历触发更新数据
     changeMonth(options) {
 
       let newDate = new Date(options.year + '-' + options.month)
@@ -166,6 +234,8 @@ export default {
       }
 
     },
+
+    // 修改年/月历显示时更新数据
     changeMode(options) {
       if (options.mode === 'month') {
         this.updateMonthData(options.filterDate)
@@ -173,6 +243,7 @@ export default {
         this.updateYearData(options.filterDate)
       }
     },
+
     // 展示日期数字
     displayNum(cellData) {
       if (cellData.mode === 'month') {
@@ -272,12 +343,89 @@ export default {
 
     // 统一更新年视图事项
     updateYearData(date) {
-      console.log(date);
+      //console.log(date);
       this.getYearLabelEvent(date)
       this.getYearMomentEvent(date)
     },
 
+    // 统一更新日视图事项
+    updateDayData(date) {
+      this.getNowLabelEvent(date)
+      this.getNowMomentEvent(date)
+      this.getNowTimeEvent(date)
+    },
 
+    updateAll() {
+      let date = new Date(this.nowDate)
+      this.updateMonthData(date)
+      this.updateDayData(date)
+      console.log(this.nowLabalEvent)
+    },
+
+    // 以下为drawer的方法 //
+
+    // 编辑标签事项
+    clickUpdateLE(item) {
+      this.chooseEvent = item
+      this.LEVisable = true
+    },
+
+    // 编辑时刻事项
+    clickUpdateME(item) {
+      this.chooseEvent = item
+      this.MEVisable = true
+    },
+
+    // 编辑时段事项
+    clickUpdateTE(item) {
+      this.chooseEvent = item
+      this.TEVisable = true
+    },
+
+    // 获得当天的标签事项
+    getNowLabelEvent(nowDate) {
+      GetLe(formatDate(nowDate)).then(({ data }) => {
+        if (data.code !== 0 && data.code !== 4) {
+          ElementUI.Message({
+            showClose: false,
+            message: '获取标签事项信息失败',
+            type: 'error'
+          })
+        } else {
+          this.nowLabalEvent = data.data
+        }
+      })
+    },
+
+    // 获得当天的时刻事项
+    getNowMomentEvent(nowDate) {
+      GetMe(formatDate(nowDate)).then(({ data }) => {
+        if (data.code !== 0 && data.code !== 4) {
+          ElementUI.Message({
+            showClose: false,
+            message: '获取标签事项信息失败',
+            type: 'error'
+          })
+        } else {
+          this.nowMomentEvent = data.data
+        }
+      })
+    },
+
+    // 获得当天的时段事项
+    getNowTimeEvent(nowDate) {
+      GetTe(formatDate(nowDate)).then(({ data }) => {
+        if (data.code !== 0 && data.code !== 4) {
+          ElementUI.Message({
+            showClose: false,
+            message: '获取标签事项信息失败',
+            type: 'error'
+          })
+        } else {
+          this.nowTimeEvent = data.data
+        }
+      })
+    },
   },
 };
 </script>
@@ -339,5 +487,28 @@ export default {
       margin: 5px;
     }
   }
+}
+
+// 以下为卡片样式
+
+.text {
+  font-size: 14px;
+}
+
+.item {
+  margin-bottom: 18px;
+}
+
+.clearfix:before,
+.clearfix:after {
+  display: table;
+  content: "";
+}
+.clearfix:after {
+  clear: both;
+}
+
+.box-card {
+  margin: 10px;
 }
 </style>
