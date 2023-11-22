@@ -31,6 +31,7 @@
 
 <script>
 import { PatchLe, DeleteLe } from '../api/event';
+import ElementUI from 'element-ui';
 export default {
   name: 'updateLeDialog',
   data() {
@@ -66,6 +67,11 @@ export default {
     }
   },
   methods: {
+
+    timeConvert(date) {
+      return new Date(date.setHours(date.getHours() + 8))
+    },
+
     printLE() {
       this.id = this.dataLE.id;
       this.setInViewPage = this.dataLE.setInViewPage;
@@ -74,17 +80,18 @@ export default {
       this.name = this.dataLE.name;
       this.text = this.dataLE.text;
     },
+
     Delete() {
       const data = this.dataLE.id;
       DeleteLe(data).then(({ data }) => {
         if (data.code !== 0) {
-          this.$message({
+          ElementUI.Message({
             showClose: true,
             message: data.msg,
             type: 'error'
           });
         } else {
-          this.$message({
+          ElementUI.Message({
             showClose: true,
             message: '删除成功',
             type: 'success'
@@ -99,19 +106,34 @@ export default {
         id: this.id,
         name: this.name,
         text: this.text,
-        attachDate: this.attachDate,
+        attachDate: this.timeConvert(this.attachDate),
         setInViewPage: this.setInViewPage,
         isCompleted: this.isCompleted,
       }
+      if (this.attachDate === '') {
+        ElementUI.Message({
+          showClose: true,
+          message: '请选择时间',
+          type: 'error'
+        })
+        return
+      } else if (this.name === '') {
+        ElementUI.Message({
+          showClose: true,
+          message: '请输入事项名',
+          type: 'error'
+        })
+        return
+      }
       PatchLe(data).then(({ data }) => {
         if (data.code !== 0) {
-          this.$message({
+          ElementUI.Message({
             showClose: true,
             message: data.msg,
             type: 'error'
           });
         } else {
-          this.$message({
+          ElementUI.Message({
             showClose: true,
             message: '修改成功',
             type: 'success'

@@ -41,13 +41,13 @@ export const PatchLe = (data) => {
 
 //delete
 export const DeleteTe = (data) => {
-    return http.delete('/event/te', data, { headers: { 'Authorization': localStorage.getItem('token') } })
+    return http.delete('/event/te/' + data, { headers: { 'Authorization': localStorage.getItem('token') } })
 }
 
 export const DeleteMe = (data) => {
-    return http.delete('/event/me', data, { headers: { 'Authorization': localStorage.getItem('token') } })
+    return http.delete('/event/me/' + data, { headers: { 'Authorization': localStorage.getItem('token') } })
 }
 
 export const DeleteLe = (data) => {
-    return http.delete('/event/le', data, { headers: { 'Authorization': localStorage.getItem('token') } })
+    return http.delete('/event/le/' + data, { headers: { 'Authorization': localStorage.getItem('token') } })
 }

@@ -73,6 +73,7 @@
 
 <script>
 import { PostLe, PostTe, PostMe } from '../api/event';
+import ElementUI from 'element-ui';
 export default {
   name: 'addEventDialog',
   data() {
@@ -126,6 +127,10 @@ export default {
   },
   methods: {
 
+    timeConvert(date) {
+      return new Date(date.setHours(date.getHours() + 8))
+    },
+
     openDialog() {
       this.visable = true;
       this.deadline = this.parentDate;
@@ -134,11 +139,51 @@ export default {
     },
 
     OnSubmit() {
+      if (this.name === '') {
+        ElementUI.Message({
+          showClose: true,
+          message: '请输入事项名',
+          type: 'error'
+        })
+        return
+      }
       if (this.activeName == 'timeEvent') {
+        if (this.startTime === '' || this.overTime === '') {
+          ElementUI.Message({
+            showClose: true,
+            message: '请选择时间',
+            type: 'error'
+          })
+          return
+        }
+        else if (this.startTime > this.overTime) {
+          ElementUI.Message({
+            showClose: true,
+            message: '开始时间不能早于结束时间',
+            type: 'error'
+          })
+          return
+        }
         this.SubmitTe();
       } else if (this.activeName == 'momentEvent') {
+        if (this.deadline === '') {
+          ElementUI.Message({
+            showClose: true,
+            message: '请选择时间',
+            type: 'error'
+          })
+          return
+        }
         this.SubmitMe();
       } else {
+        if (this.attachDate === '') {
+          ElementUI.Message({
+            showClose: true,
+            message: '请选择时间',
+            type: 'error'
+          })
+          return
+        }
         this.SubmitLe();
       }
     },
@@ -148,26 +193,27 @@ export default {
         id: this.id,
         name: this.name,
         text: this.text,
-        startTime: this.startTime,
-        overTime: this.overTime,
+        startTime: this.timeConvert(this.startTime),
+        overTime: this.timeConvert(this.overTime),
         setInViewPage: this.setInViewPage,
-        isFinished: this.isCompleted,
+        isCompleted: this.isCompleted,
       }
       console.log(data1);
       PostTe(data1).then(({ data }) => {
         if (data.code !== 0) {
-          this.$message({
+          ElementUI.Message({
             showClose: true,
             message: data.msg,
             type: 'error'
           });
         } else {
-          this.$message({
+          ElementUI.Message({
             showClose: true,
             message: '添加成功',
             type: 'success'
           });
           this.visible = false
+          this.$emit("updateData")
         }
       })
     },
@@ -176,24 +222,25 @@ export default {
         id: this.id,
         name: this.name,
         text: this.text,
-        deadline: this.deadline,
+        deadline: this.timeConvert(this.deadline),
         setInViewPage: this.setInViewPage,
         isFinished: this.isFinished,
       }
       PostMe(data).then(({ data }) => {
         if (data.code !== 0) {
-          this.$message({
+          ElementUI.Message({
             showClose: true,
             message: data.msg,
             type: 'error'
           });
         } else {
-          this.$message({
+          ElementUI.Message({
             showClose: true,
             message: '添加成功',
             type: 'success'
           });
           this.visible = false
+          this.$emit("updateData")
         }
       })
     },
@@ -202,26 +249,26 @@ export default {
         id: this.id,
         name: this.name,
         text: this.text,
-        attachDate: this.attachDate,
+        attachDate: this.timeConvert(this.attachDate),
         setInViewPage: this.setInViewPage,
-        // isFinished: !this.isFinished,
-        isFinished: this.isFinished,
+        isCompleted: this.isFinished,
       }
       // console.log(data)
       PostLe(data).then(({ data }) => {
         if (data.code !== 0) {
-          this.$message({
+          ElementUI.Message({
             showClose: true,
             message: data.msg,
             type: 'error'
           });
         } else {
-          this.$message({
+          ElementUI.Message({
             showClose: true,
             message: '添加成功',
             type: 'success'
           });
           this.visible = false
+          this.$emit("updateData")
         }
       })
     }

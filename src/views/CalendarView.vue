@@ -42,7 +42,7 @@
 
     <!-- 添加事项弹窗 -->
     <div>
-      <addDialog :addDialogVisible.sync="addDialogVisible" :parentDate="parentDate"></addDialog>
+      <addDialog :addDialogVisible.sync="addDialogVisible" :parentDate="parentDate" @updateData="updateAll"></addDialog>
       <!-- <el-button @click="addDialogVisible = true">添加事项</el-button> -->
     </div>
 
@@ -66,7 +66,8 @@
               <el-card class="box-card">
                 <div slot="header" class="clearfix">
                   <span>{{ item.name }}</span>
-                  <el-button style="float: right; padding: 3px 3px" type="text" @click="clickDeleteLE(item)">删除</el-button>
+                  <el-popconfirm confirm-button-text='删除' confirm-button-type="danger" cancel-button-text='取消' @confirm="clickDeleteLE(item)" icon="el-icon-info" icon-color="red" title="确定删除吗？">
+                    <el-button style="float: right; padding: 3px 3px" type="text" slot="reference">删除</el-button></el-popconfirm>
                   <el-button style="float: right; padding: 3px 0" type="text" @click="clickUpdateLE(item)">编辑</el-button>
                 </div>
                 <div>{{ item.text ? item.text : '暂无备注' }}</div>
@@ -80,7 +81,8 @@
                 <div slot="header" class="clearfix">
                   <span>{{ item.name }}</span>
                   <el-tag type="danger" size="small" style="margin: 10px"> {{formatHHMM(item.deadline)}}</el-tag>
-                  <el-button style="float: right; padding: 3px 3px" type="text" @click="clickDeleteME(item)">删除</el-button>
+                  <el-popconfirm confirm-button-text='删除' confirm-button-type="danger" cancel-button-text='取消' @confirm="clickDeleteME(item)" icon="el-icon-info" icon-color="red" title="确定删除吗？">
+                    <el-button style="float: right; padding: 3px 3px" type="text" slot="reference">删除</el-button></el-popconfirm>
                   <el-button style="float: right; padding: 3px 0" type="text" @click="clickUpdateME(item)">编辑</el-button>
                 </div>
                 <div>{{ item.text ? item.text : '暂无备注' }}</div>
@@ -94,7 +96,9 @@
                 <div slot="header" class="clearfix">
                   <span>{{ item.name }}</span>
                   <el-tag type="primary" size="small" style="margin: 10px"> {{format(item.startTime)}} - {{format(item.overTime)}}</el-tag>
-                  <el-button style="float: right; padding: 3px 3px" type="text" @click="clickDeleteTE(item)">删除</el-button>
+                  <el-popconfirm confirm-button-text='删除' confirm-button-type="danger" cancel-button-text='取消' @confirm="clickDeleteTE(item)" icon="el-icon-info" icon-color="red" title="确定删除吗？">
+                    <el-button style="float: right; padding: 3px 3px" type="text" slot="reference">删除</el-button>
+                  </el-popconfirm>
                   <el-button style="float: right; padding: 3px 0" type="text" @click="clickUpdateTE(item)">编辑</el-button>
                 </div>
                 <div>{{ item.text ? item.text : '暂无备注' }}</div>
@@ -116,12 +120,11 @@ import '@/utils/dateFormat'
 import '@/api/calendar'
 import { formatDate, formatDateTime, formatTimeHHMM } from '@/utils/dateFormat';
 import { GetMonthLabelEvent, GetMonthMomentEvent, GetYearLabelEvent, GetYearMomentEvent } from '@/api/calendar';
-import { GetLe, GetMe, GetTe } from '@/api/event'
+import { GetLe, GetMe, GetTe, DeleteLe, DeleteMe, DeleteTe } from '@/api/event'
 import ElementUI from 'element-ui';
 export default {
   mounted() {
-    this.getMonthLabelEvent(new Date())
-    this.getMonthMomentEvent(new Date())
+    this.updateMonthData(new Date())
   },
   data() {
     return {
@@ -215,6 +218,7 @@ export default {
           this.parentDate = options.cell.date
           this.addDialogVisible = true
         } else {
+          this.parentDate = options.cell.date
           this.nowDate = formatDate(options.cell.date)
           this.updateDayData(options.cell.date)
           this.drawerVisible = true
@@ -369,17 +373,74 @@ export default {
       this.chooseEvent = item
       this.LEVisable = true
     },
+    // 删除标签事项
+    clickDeleteLE(item) {
+      DeleteLe(item.id).then(({ data }) => {
+        if (data.code !== 0) {
+          ElementUI.Message({
+            showClose: false,
+            message: '删除失败',
+            type: 'error'
+          })
+        } else {
+          ElementUI.Message({
+            showClose: false,
+            message: '删除成功',
+            type: 'success'
+          })
+          this.updateAll()
+        }
+      })
+    },
 
     // 编辑时刻事项
     clickUpdateME(item) {
       this.chooseEvent = item
       this.MEVisable = true
     },
+    // 删除时刻事项
+    clickDeleteME(item) {
+      DeleteMe(item.id).then(({ data }) => {
+        if (data.code !== 0) {
+          ElementUI.Message({
+            showClose: false,
+            message: '删除失败',
+            type: 'error'
+          })
+        } else {
+          ElementUI.Message({
+            showClose: false,
+            message: '删除成功',
+            type: 'success'
+          })
+          this.updateAll()
+        }
+      })
+    },
 
     // 编辑时段事项
     clickUpdateTE(item) {
       this.chooseEvent = item
       this.TEVisable = true
+    },
+    // 删除时段事项
+    clickDeleteTE(item) {
+      DeleteTe(item.id).then(({ data }) => {
+        if (data.code !== 0) {
+          ElementUI.Message({
+            showClose: false,
+            message: '删除失败',
+            type: 'error'
+          })
+        } else {
+          ElementUI.Message({
+            showClose: false,
+            message: '删除成功',
+            type: 'success'
+          })
+          this.updateAll()
+        }
+      })
     },
 
     // 获得当天的标签事项
