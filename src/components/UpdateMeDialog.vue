@@ -1,5 +1,5 @@
 <template>
-  <el-dialog @open="printME" title="时刻事项" :visible.sync="visible">
+  <el-dialog @open="printME" title="时刻事项修改" :visible.sync="visible">
     <el-form>
 
       <el-form-item label="事项名称：" :label-width="formLabelWidth">
@@ -23,9 +23,9 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
+      <el-button type="danger" @click="Delete">删 除</el-button>
       <el-button @click="visible = false">取 消</el-button>
       <el-button type="primary" @click="SubmitPatchme">修 改</el-button>
-      <el-button type="danger" @click="Delete">删 除</el-button>
     </div>
   </el-dialog>
 </template>

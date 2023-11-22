@@ -1,5 +1,5 @@
 <template>
-  <el-dialog @open="printTE" title="时段事项" :visible.sync="visible">
+  <el-dialog @open="printTE" title="时段事项修改" :visible.sync="visible">
     <el-form>
       <el-form-item label="事项名称：" :label-width="formLabelWidth">
         <el-input v-model="name" autocomplete="off"></el-input>
@@ -26,9 +26,9 @@
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
+      <el-button type="danger" @click="Delete">删 除</el-button>
       <el-button @click="visible = false">取 消</el-button>
       <el-button type="primary" @click="SubmitPatchte">修 改</el-button>
-      <el-button type="danger" @click="Delete">删 除</el-button>
     </div>
   </el-dialog>
 </template>
