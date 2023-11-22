@@ -1,8 +1,8 @@
 <template>
-  <el-tabs v-model="activeName" @tab-click="handleClick" class="userSetting">
+  <el-tabs v-model="activeName" class="userSetting">
     <!-- 用户信息页面 -->
     <el-tab-pane label="用户信息" name="info">
-      <el-descriptions v-model="data" title="用户信息" column="1">
+      <el-descriptions v-model="data" title="用户信息" :column="col">
         <el-descriptions-item label="用户名">{{
           data.UserInfo.name
         }}</el-descriptions-item>
@@ -88,7 +88,8 @@ export default {
       newPassWord: null,
       newPassWord2: null,
       input: null,
-      newName: null
+      newName: null,
+      col: 1
     }
   },
   created() {
@@ -278,11 +279,11 @@ export default {
     // 验证密码：value为传入的密码
     async verifyPassWord(value) {
       console.log(value)
-      const { data: data_1 }=await VerifyPassWord({
+      const { data: data_1 } = await VerifyPassWord({
         "passWord": value
       })
       console.log(data_1)
-      return data_1.code==0
+      return data_1.code == 0
     }
   }
 }

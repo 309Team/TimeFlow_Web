@@ -19,7 +19,7 @@
       </el-form-item>
 
       <el-form-item label="是否完成：" :label-width="formLabelWidth">
-        <el-switch v-model="isCompleted"></el-switch>
+        <el-switch v-model="completed"></el-switch>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -42,7 +42,7 @@ export default {
       text: '',
       deadline: '',
       setInViewPage: true,
-      isCompleted: false,
+      completed: false,
       formLabelWidth: '120px',
       activeName: 'first',
     };
@@ -75,7 +75,7 @@ export default {
       this.id = this.dataME.id;
       this.setInViewPage = this.dataME.setInViewPage;
       this.deadline = this.dataME.deadline;
-      this.isCompleted = this.dataME.isCompleted;
+      this.completed = this.dataME.completed;
       this.name = this.dataME.name;
       this.text = this.dataME.text;
     },
@@ -104,9 +104,9 @@ export default {
         id: this.id,
         name: this.name,
         text: this.text,
-        deadline: this.timeConvert(this.deadline),
+        deadline: this.timeConvert(new Date(this.deadline)),
         setInViewPage: this.setInViewPage,
-        isCompleted: this.isCompleted,
+        completed: this.completed,
       }
 
       if (this.name === '') {

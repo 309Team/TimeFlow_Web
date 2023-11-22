@@ -1,9 +1,11 @@
 <template>
-  <container class="page-container">
-    <t-select v-model="mode" class="mode-select-base">
-      <t-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label" />
-    </t-select>
-    <t-calendar :mode="mode" :month="month" :year="year" @cell-click="click" @month-change="changeMonth" @controller-change="changeMode" :controllerConfig="controllerConfig">
+  <div>
+    <div>
+      <t-select v-model="mode" class="mode-select-base">
+        <t-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label" />
+      </t-select>
+    </div>
+    <t-calendar :mode="mode" :month="month" :year="year" @cell-click="click" @month-change="changeMonth" @controller-change="changeMode" :controllerConfig="controllerConfig" style="margin: 15px">
       <div slot="cell" slot-scope="data" class="outerWrapper">
         <div class="number">{{ displayNum(data) }}</div>
         <template>
@@ -50,7 +52,7 @@
     <div>
       <updateLEDialog :updateLeDialogVisible.sync="LEVisable" :dataLE="chooseEvent" @updateData="updateAll" />
       <updateMEDialog :updateMeDialogVisible.sync="MEVisable" :dataME="chooseEvent" @updateData="updateAll" />
-      <updateTEDialog :updateTeDialogVisible.sync="TEVisable" :dataME="chooseEvent" @updateData="updateAll" />
+      <updateTEDialog :updateTeDialogVisible.sync="TEVisable" :dataTE="chooseEvent" @updateData="updateAll" />
     </div>
 
     <!-- 抽屉组件 -->
@@ -95,13 +97,21 @@
               <el-card class="box-card">
                 <div slot="header" class="clearfix">
                   <span>{{ item.name }}</span>
-                  <el-tag type="primary" size="small" style="margin: 10px"> {{format(item.startTime)}} - {{format(item.overTime)}}</el-tag>
+                  <span v-if="item.completed === false">
+                    <el-tag type="info" size="small" style="margin: 10px" v-if="new Date(item.startTime) > new Date()">未开始</el-tag>
+                    <el-tag type="warning" size="small" style="margin: 10px" v-if="new Date(item.startTime) <= new Date() && new Date(item.overTime) >= new Date()">进行中</el-tag>
+                    <el-tag type="error" size="small" style="margin: 10px" v-if="new Date(item.overTime) < new Date()">已结束</el-tag>
+                  </span>
+                  <span v-if="item.completed === true">
+                    <el-tag type="success" size="small" style="margin: 10px">已完成</el-tag>
+                  </span>
                   <el-popconfirm confirm-button-text='删除' confirm-button-type="danger" cancel-button-text='取消' @confirm="clickDeleteTE(item)" icon="el-icon-info" icon-color="red" title="确定删除吗？">
                     <el-button style="float: right; padding: 3px 3px" type="text" slot="reference">删除</el-button>
                   </el-popconfirm>
                   <el-button style="float: right; padding: 3px 0" type="text" @click="clickUpdateTE(item)">编辑</el-button>
                 </div>
-                <div>{{ item.text ? item.text : '暂无备注' }}</div>
+                <el-tag type="primary" size="small" style="margin: 10px"> {{formatDateAndTime(new Date(item.startTime))}} - {{formatDateAndTime(new Date(item.overTime))}}</el-tag>
+                <div style="margin: 10px">{{ item.text ? item.text : '暂无备注' }}</div>
               </el-card>
             </div>
           </t-collapse-panel>
@@ -111,7 +121,7 @@
         </template>
       </t-drawer>
     </div>
-  </container>
+  </div>
 
 </template>
 
@@ -119,10 +129,11 @@
 import '@/utils/dateFormat'
 import '@/api/calendar'
 import { formatDate, formatDateTime, formatTimeHHMM } from '@/utils/dateFormat';
-import { GetMonthLabelEvent, GetMonthMomentEvent, GetYearLabelEvent, GetYearMomentEvent } from '@/api/calendar';
+import { GetMonthLabelEvent, GetMonthMomentEvent, GetYearLabelEvent, GetYearMomentEvent, GetMonthTimeEvent, GetYearTimeEvent } from '@/api/calendar';
 import { GetLe, GetMe, GetTe, DeleteLe, DeleteMe, DeleteTe } from '@/api/event'
 import ElementUI from 'element-ui';
 export default {
+  name: 'calendarView',
   mounted() {
     this.updateMonthData(new Date())
   },
@@ -259,9 +270,9 @@ export default {
     // 获取当月每天的标签事项数
     getMonthLabelEvent(data) {
       let date = formatDate(data)
-      console.log(date);
+      //console.log(date);
       GetMonthLabelEvent(date).then(({ data }) => {
-        if (data.code !== 0 && data.code !== 4) {
+        if (data.code !== 0) {
           ElementUI.Message({
             showClose: false,
             message: '获取标签事项信息失败',
@@ -282,7 +293,7 @@ export default {
       let date = formatDate(data)
       //console.log(date);
       GetMonthMomentEvent(date).then(({ data }) => {
-        if (data.code !== 0 && data.code !== 4) {
+        if (data.code !== 0) {
           ElementUI.Message({
             showClose: false,
             message: '获取时刻事项信息失败',
@@ -300,15 +311,31 @@ export default {
 
     // 获取当月每天的时段事项数
     getMonthTimeEvent(data) {
-      console.log(data)
+      let date = formatDate(data)
+      //console.log(date);
+      GetMonthTimeEvent(date).then(({ data }) => {
+        if (data.code !== 0) {
+          ElementUI.Message({
+            showClose: false,
+            message: '获取时段事项信息失败',
+            type: 'error'
+          })
+        } else {
+          this.timeEvent = data.data
+          //console.log(data.data);
+        }
+      })
+        .catch((err) => {
+          console.log(err)
+        })
     },
 
     // 获取当年每月的标签事项数
     getYearLabelEvent(data) {
       let date = formatDate(data)
-      console.log(date);
+      //console.log(date);
       GetYearLabelEvent(date).then(({ data }) => {
-        if (data.code !== 0 && data.code !== 4) {
+        if (data.code !== 0) {
           ElementUI.Message({
             showClose: false,
             message: '获取标签事项信息失败',
@@ -324,9 +351,9 @@ export default {
     // 获取当年每月的时刻事项数
     getYearMomentEvent(data) {
       let date = formatDate(data)
-      console.log(date);
+      //console.log(date);
       GetYearMomentEvent(date).then(({ data }) => {
-        if (data.code !== 0 && data.code !== 4) {
+        if (data.code !== 0) {
           ElementUI.Message({
             showClose: false,
             message: '获取标签事项信息失败',
@@ -334,6 +361,23 @@ export default {
           })
         } else {
           this.momentEventYear = data.data
+        }
+      })
+    },
+
+    // 获取当年每月的时刻事项数
+    getYearTimeEvent(data) {
+      let date = formatDate(data)
+      //console.log(date);
+      GetYearTimeEvent(date).then(({ data }) => {
+        if (data.code !== 0) {
+          ElementUI.Message({
+            showClose: false,
+            message: '获取标签事项信息失败',
+            type: 'error'
+          })
+        } else {
+          this.timeEventYear = data.data
         }
       })
     },
@@ -350,6 +394,7 @@ export default {
       //console.log(date);
       this.getYearLabelEvent(date)
       this.getYearMomentEvent(date)
+      this.getYearTimeEvent(date)
     },
 
     // 统一更新日视图事项
@@ -363,7 +408,7 @@ export default {
       let date = new Date(this.nowDate)
       this.updateMonthData(date)
       this.updateDayData(date)
-      console.log(this.nowLabalEvent)
+      //console.log(this.nowLabalEvent)
     },
 
     // 以下为drawer的方法 //
@@ -420,9 +465,14 @@ export default {
 
     // 编辑时段事项
     clickUpdateTE(item) {
+      //console.log(item)
       this.chooseEvent = item
+      //console.log(this.chooseEvent);
+      this.chooseEvent.startTime = new Date(item.startTime)
+      this.chooseEvent.overTime = new Date(item.overTime)
       this.TEVisable = true
     },
+
     // 删除时段事项
     clickDeleteTE(item) {
       DeleteTe(item.id).then(({ data }) => {
@@ -446,7 +496,7 @@ export default {
     // 获得当天的标签事项
     getNowLabelEvent(nowDate) {
       GetLe(formatDate(nowDate)).then(({ data }) => {
-        if (data.code !== 0 && data.code !== 4) {
+        if (data.code !== 0) {
           ElementUI.Message({
             showClose: false,
             message: '获取标签事项信息失败',
@@ -461,7 +511,7 @@ export default {
     // 获得当天的时刻事项
     getNowMomentEvent(nowDate) {
       GetMe(formatDate(nowDate)).then(({ data }) => {
-        if (data.code !== 0 && data.code !== 4) {
+        if (data.code !== 0) {
           ElementUI.Message({
             showClose: false,
             message: '获取标签事项信息失败',
@@ -476,7 +526,7 @@ export default {
     // 获得当天的时段事项
     getNowTimeEvent(nowDate) {
       GetTe(formatDate(nowDate)).then(({ data }) => {
-        if (data.code !== 0 && data.code !== 4) {
+        if (data.code !== 0) {
           ElementUI.Message({
             showClose: false,
             message: '获取标签事项信息失败',
@@ -484,6 +534,7 @@ export default {
           })
         } else {
           this.nowTimeEvent = data.data
+          //console.log(this.nowTimeEvent);
         }
       })
     },
@@ -493,12 +544,12 @@ export default {
 
 <style lang="less" scoped>
 .page-container {
-  padding: 40px;
+  padding: 20px;
 }
 .mode-select-base {
   width: 200px;
   display: inline-block;
-  margin: 10px 10px 0 0;
+  margin: 20px 20px 20px 20px;
 }
 .outerWrapper {
   width: 100%;

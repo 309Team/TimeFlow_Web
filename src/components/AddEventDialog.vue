@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog title="添加事项" :visible.sync="visible">
-      <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+      <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="时段事项" name="timeEvent">
           <el-form>
             <el-form-item label="事项名称：" :label-width="formLabelWidth">
@@ -20,7 +20,7 @@
               <el-date-picker type="datetime" placeholder="选择日期时间" v-model="overTime" style="width: 100%;"></el-date-picker>
             </el-form-item>
             <el-form-item label="是否完成：" :label-width="formLabelWidth">
-              <el-switch v-model="isCompleted"></el-switch>
+              <el-switch v-model="completed"></el-switch>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -39,7 +39,7 @@
               <el-date-picker type="datetime" placeholder="选择日期时间" v-model="deadline" style="width: 100%;"></el-date-picker>
             </el-form-item>
             <el-form-item label="是否完成：" :label-width="formLabelWidth">
-              <el-switch v-model="isFinished"></el-switch>
+              <el-switch v-model="completed"></el-switch>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -58,7 +58,7 @@
               <el-date-picker type="date" placeholder="选择日期时间" v-model="attachDate" style="width: 100%;"></el-date-picker>
             </el-form-item>
             <el-form-item label="是否完成：" :label-width="formLabelWidth">
-              <el-switch v-model="isCompleted"></el-switch>
+              <el-switch v-model="completed"></el-switch>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -86,7 +86,7 @@ export default {
       overTime: '',
       attachDate: '',
       setInViewPage: true,
-      isCompleted: true,
+      completed: true,
       formLabelWidth: '120px',
       activeName: 'timeEvent',
     };
@@ -107,7 +107,7 @@ export default {
       default: true
     },
     parentDate: {
-      type: Object,
+      type: Date,
       default: new Date()
     }
   },
@@ -120,7 +120,7 @@ export default {
         this.deadline = this.parentDate;
         this.attachDate = this.parentDate;
         this.startTime = this.parentDate;
-        this.isCompleted = false;
+        this.completed = false;
         this.setInViewPage = true;
       }
     }
@@ -196,7 +196,7 @@ export default {
         startTime: this.timeConvert(this.startTime),
         overTime: this.timeConvert(this.overTime),
         setInViewPage: this.setInViewPage,
-        isCompleted: this.isCompleted,
+        completed: this.completed,
       }
       console.log(data1);
       PostTe(data1).then(({ data }) => {
@@ -224,7 +224,7 @@ export default {
         text: this.text,
         deadline: this.timeConvert(this.deadline),
         setInViewPage: this.setInViewPage,
-        isFinished: this.isFinished,
+        completed: this.completed,
       }
       PostMe(data).then(({ data }) => {
         if (data.code !== 0) {
@@ -251,7 +251,7 @@ export default {
         text: this.text,
         attachDate: this.timeConvert(this.attachDate),
         setInViewPage: this.setInViewPage,
-        isCompleted: this.isFinished,
+        completed: this.completed,
       }
       // console.log(data)
       PostLe(data).then(({ data }) => {

@@ -18,7 +18,7 @@
       </el-form-item>
 
       <el-form-item label="是否完成：" :label-width="formLabelWidth">
-        <el-switch v-model="isCompleted"></el-switch>
+        <el-switch v-model="completed"></el-switch>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -41,7 +41,7 @@ export default {
       text: '',
       attachDate: '',
       setInViewPage: true,
-      isCompleted: false,
+      completed: false,
       formLabelWidth: '120px',
       activeName: 'first',
     };
@@ -76,7 +76,7 @@ export default {
       this.id = this.dataLE.id;
       this.setInViewPage = this.dataLE.setInViewPage;
       this.attachDate = this.dataLE.attachDate;
-      this.isCompleted = this.dataLE.isCompleted;
+      this.completed = this.dataLE.completed;
       this.name = this.dataLE.name;
       this.text = this.dataLE.text;
     },
@@ -108,7 +108,7 @@ export default {
         text: this.text,
         attachDate: this.timeConvert(new Date(this.attachDate)),
         setInViewPage: this.setInViewPage,
-        isCompleted: this.isCompleted,
+        completed: this.completed,
       }
       if (this.attachDate === '') {
         ElementUI.Message({
@@ -125,6 +125,7 @@ export default {
         })
         return
       }
+      console.log(data);
       PatchLe(data).then(({ data }) => {
         if (data.code !== 0) {
           ElementUI.Message({

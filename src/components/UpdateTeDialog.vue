@@ -22,7 +22,7 @@
       </el-form-item>
 
       <el-form-item label="是否完成：" :label-width="formLabelWidth">
-        <el-switch v-model="isCompleted"></el-switch>
+        <el-switch v-model="completed"></el-switch>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -46,7 +46,7 @@ export default {
       startTime: '',
       overTime: '',
       setInViewPage: true,
-      isCompleted: false,
+      completed: false,
       formLabelWidth: '120px',
       activeName: 'first',
     };
@@ -80,7 +80,7 @@ export default {
       this.setInViewPage = this.dataTE.setInViewPage;
       this.startTime = this.dataTE.startTime;
       this.overTime = this.dataTE.overTime;
-      this.isCompleted = this.dataTE.isCompleted;
+      this.completed = this.dataTE.completed;
       this.name = this.dataTE.name;
       this.text = this.dataTE.text;
     },
@@ -112,7 +112,7 @@ export default {
         startTime: this.timeConvert(this.startTime),
         overTime: this.timeConvert(this.overTime),
         setInViewPage: this.setInViewPage,
-        isCompleted: this.isCompleted,
+        completed: this.completed,
       }
       if (this.name === '') {
         ElementUI.Message({
