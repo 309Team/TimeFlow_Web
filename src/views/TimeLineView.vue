@@ -54,11 +54,11 @@
 
 
 
-        <!-- <div class="addEvent-div">
+        <div class="addEvent-div">
             <addDialog :addDialogVisible.sync="addDialogVisible"></addDialog>
             <add-event-dialog></add-event-dialog>
             <el-button round @click="open">添加事项</el-button>
-        </div> -->
+        </div>
 
     </container>
 </template>
@@ -127,7 +127,7 @@ export default {
     },
     components: {
         Container,
-        // addDialog: () => import("@/components/AddEventDialog.vue")
+        addDialog: () => import("@/components/AddEventDialog.vue")
     }
 }
 </script>   
@@ -149,10 +149,10 @@ export default {
     padding: 10px;
 }
 
-/* .addEvent-div {
+.addEvent-div {
     height: auto;
     width: 110px;
-} */
+}
 
 .drawer-card-startTime {
     height: 100px;

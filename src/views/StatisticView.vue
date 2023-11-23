@@ -2,12 +2,12 @@
     <Container class="page-container">
 
         <div class="block">
-            <span class="demonstration">默认</span>
+            <span class="demonstration">选择查看日期</span>
+
             <el-date-picker v-model="date_range" type="daterange" range-separator="至" start-placeholder="开始日期"
                 end-placeholder="结束日期" @change="getStatistic">
             </el-date-picker>
         </div>
-
 
         <div id="histogram" style="width: 600px;height:400px;"></div>
         <div id="NestedPies" style="width: 1000px;height:800px;"></div>
