@@ -68,6 +68,7 @@ export default {
         }
     },
     methods: {
+        // 将传入的数据绑定到表格
         printME() {
                 this.id=this.dataME.id;
                 this.setInViewPage=this.dataME.setInViewPage;

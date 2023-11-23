@@ -1,14 +1,25 @@
 <template>
   <div>
+
+    <!-- 添加按钮 -->
     <addDialog :addDialogVisible.sync="addDialogVisible"></addDialog>
-    <el-button type="primary" @click="open" round>添加事项</el-button>
+    <div class="button-container">
+      <el-button type="primary" class="floating-btn" icon="el-icon-plus" @click="open" circle></el-button>
+    </div>
 
+    <!-- 申请修删对话框的组件 -->
     <updateTeDialog :dataTE="dataTE" :updateTeDialogVisible.sync="updateTeDialogVisible"></updateTeDialog>
-
     <updateMeDialog :dataME="dataME" :updateMeDialogVisible.sync="updateMeDialogVisible"></updateMeDialog>
-
     <updateLeDialog :dataLE="dataLE" :updateLeDialogVisible.sync="updateLeDialogVisible"></updateLeDialog>
-    <br>
+
+    <!-- 走马灯 -->
+    <el-carousel :interval="4000" type="card" height="400px">
+      <el-carousel-item v-for="item in pictureData" :key="item">
+        <img :src="item.url" alt="" />
+      </el-carousel-item>
+    </el-carousel>
+
+    <!-- 查询今日事项的表格 -->
     <t-space direction="horizontal" class="cardsize">
       <t-card title="时段事件" header bordered hover-shadow>
         <template>
@@ -35,6 +46,7 @@
 <script>
 import { GetTe, GetMe, GetLe } from '../api/event';
 export default {
+  // 引用的对话框组件
   components: {
     addDialog: () => import("@/components/AddEventDialog.vue"),
     updateTeDialog: () => import("@/components/UpdateTeDialog.vue"),
@@ -44,20 +56,49 @@ export default {
 
   data() {
     return {
+
+      // 对话框是否显示
       addDialogVisible: false,
       updateTeDialogVisible: false,
       updateMeDialogVisible: false,
       updateLeDialogVisible: false,
-      return_data: [],
+
+      // 图片数据
+      pictureData: [
+        { url:require("../img/1.png") },
+        { url:require("../img/2.png") },
+        { url:require("../img/3.png") },
+        { url:require("../img/4.png") },
+        { url:require("../img/5.png") },
+        { url:require("../img/6.png") },
+        { url:require("../img/7.png") },
+        { url:require("../img/8.png") },
+        { url:require("../img/9.png") },
+        { url:require("../img/10.png") },
+        { url:require("../img/11.png") },
+        { url:require("../img/12.png") },
+        { url:require("../img/13.png") },
+        { url:require("../img/14.png") },
+        { url:require("../img/15.png") },
+        { url:require("../img/16.png") },
+      ],
+
+      // 表格数据源
       tableDataTe: [],
       tableDataMe: [],
       tableDataLe: [],
+
+      // 未切片的时间数据
       oldstartTime: [],
       oldoverTime: [],
       olddeadline: [],
+
+      // 传入子组件的数据
       dataTE: {},
       dataME: {},
       dataLE: {},
+
+      // 表格的列数据格式
       columnsTE: [
         { colKey: 'name', title: '事件', width: '110' },
         { colKey: 'startTime', title: '开始时间', width: '100' },
@@ -76,6 +117,7 @@ export default {
     };
   },
   methods: {
+    // 四个对话框的点击事件
     open() {
       this.addDialogVisible = true
     },
@@ -94,6 +136,8 @@ export default {
       this.updateLeDialogVisible = true;
       this.dataLE = this.tableDataLe[context.index];
     },
+
+    // 回调（无效）
     updateData() {
       let year = new Date().getFullYear();
       let month = new Date().getMonth() + 1;
@@ -120,6 +164,8 @@ export default {
       })
     }
   },
+
+  // 挂载get请求，填充进表格
   mounted() {
     let year = new Date().getFullYear();
     let month = new Date().getMonth() + 1;
@@ -153,4 +199,22 @@ export default {
 .cardsize {
   width: 100%;
   height: 100%;
-}</style>
+}
+
+.floating-btn {
+  position: fixed;
+  bottom: 100px;
+  right: 50px;
+  z-index: 999;
+}
+
+
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n+1) {
+  background-color: #d3dce6;
+}
+</style>
