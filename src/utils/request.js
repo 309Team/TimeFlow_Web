@@ -26,14 +26,15 @@ http.interceptors.response.use(function(response) {
     // 对响应数据做什么
 
     if (response.data.code === 4) {
-        localStorage.removeItem('token')
-        if (router.app.$route.name != 'Login')
+        if (localStorage.getItem('token')) {
+            localStorage.removeItem('token')
             router.push('/login')
-        ElementUI.Message({
-            showClose: true,
-            message: response.data.msg,
-            type: 'error'
-        });
+            ElementUI.Message({
+                showClose: false,
+                message: response.data.msg,
+                type: 'error'
+            });
+        }
     }
     return response;
 }, function(error) {

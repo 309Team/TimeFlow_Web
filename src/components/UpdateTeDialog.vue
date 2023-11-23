@@ -75,6 +75,7 @@ export default {
     timeConvert(date) {
       return new Date(date.setHours(date.getHours() + 8))
     },
+        // 将传入的数据绑定到表格
     printTE() {
       this.id = this.dataTE.id;
       this.setInViewPage = this.dataTE.setInViewPage;
@@ -109,8 +110,8 @@ export default {
         id: this.id,
         name: this.name,
         text: this.text,
-        startTime: this.timeConvert(this.startTime),
-        overTime: this.timeConvert(this.overTime),
+        startTime: this.timeConvert(new Date(this.startTime)),
+        overTime: this.timeConvert(new Date(this.overTime)),
         setInViewPage: this.setInViewPage,
         completed: this.completed,
       }

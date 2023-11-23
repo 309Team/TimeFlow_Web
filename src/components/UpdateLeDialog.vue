@@ -72,6 +72,7 @@ export default {
       return new Date(date.setHours(date.getHours() + 8))
     },
 
+        // 将传入的数据绑定到表格
     printLE() {
       this.id = this.dataLE.id;
       this.setInViewPage = this.dataLE.setInViewPage;
