@@ -1,26 +1,41 @@
 <template>
-    <container class="page-container">
+    <div class="page-container">
 
-        <!-- 时间轴的格子 -->
-        <div class="timeline-div">
-
-            <div v-if="return_data.length == 0">
-                今天没有事项
-                <!-- {{ return_data }} -->
+        <div class="leftside">
+            <!-- 添加事项按钮 -->
+            <div class="addEvent-div">
+                <addDialog :addDialogVisible.sync="addDialogVisible"></addDialog>
+                <add-event-dialog></add-event-dialog>
+                <el-button round @click="open">添加事项</el-button>
             </div>
 
-            <el-timeline>
-                <el-timeline-item class="item" v-for="item in return_data" :key="item.id" :index="item.id">
 
-                    <div>{{ item.startTime.slice(11, 19) }}</div>
+            <!-- 时间轴的格子 -->
+            <div class="timeline-div" style="margin-left: 80px;">
+                <h3>时间轴</h3>
+                <div v-if="return_data.length == 0">
+                    <h5>今天没有事项</h5>
+                    <!-- {{ return_data }} -->
+                </div>
 
-                    <el-card :body-style="{ padding: '15px' }" shadow="hover" @click.native=showdrawer(item)>
-                        {{ item.name }}
-                    </el-card>
 
-                </el-timeline-item>
-            </el-timeline>
+                <el-timeline>
+                    <el-timeline-item class="item" v-for="item in return_data" :key="item.id" :index="item.id">
+
+                        <div>{{ item.startTime.slice(11, 19) }}</div>
+
+                        <el-card :body-style="{ padding: '15px' }" shadow="hover" @click.native=showdrawer(item)>
+                            {{ item.name }}
+                        </el-card>
+
+                    </el-timeline-item>
+                </el-timeline>
+
+            </div>
+
         </div>
+
+
 
         <!-- 抽屉的格子 -->
         <div>
@@ -43,28 +58,26 @@
 
         <!-- 日期选择器的格子 -->
         <div class="selecter-div">
-            <div class="block">
-                <!-- <span class="demonstration">使用 value-format</span>
+            <el-card shadow="always">
+                <h3>选择展示日期</h3>
+                <div class="block">
+                    <!-- <span class="demonstration">使用 value-format</span>
                 <div class="demonstration">值：{{ value2 }}</div> -->
-                <el-date-picker v-model="selecte_date" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日"
-                    value-format="yyyy-MM-dd" @change=getTE()>
-                </el-date-picker>
-            </div>
+                    <el-date-picker v-model="selecte_date" type="date" placeholder="选择日期" format="yyyy 年 MM 月 dd 日"
+                        value-format="yyyy-MM-dd" @change=getTE()>
+                    </el-date-picker>
+                </div>
+            </el-card>
         </div>
 
 
 
-        <div class="addEvent-div">
-            <addDialog :addDialogVisible.sync="addDialogVisible"></addDialog>
-            <add-event-dialog></add-event-dialog>
-            <el-button round @click="open">添加事项</el-button>
-        </div>
 
-    </container>
+    </div>
 </template>
   
 <script>
-import { Container } from 'element-ui'
+// import { Container } from 'element-ui'
 import { GetDayTEvent } from '../api/timeline.js'
 
 export default {
@@ -116,17 +129,12 @@ export default {
         const now = new Date();
         this.selecte_date = now.getFullYear() + "-" + ('0' + (now.getMonth() + 1)).slice(-2) + "-" + ('0' + now.getDate()).slice(-2);
 
-        GetDayTEvent('2023-10-21').then((data) => {
-            // GetDayTEvent(this.today).then((data) => {
-            // console.log(data)
+        GetDayTEvent(this.selecte_date).then((data) => {
             this.return_data = data.data.data
-            // this.return_data.push("drawer",false)
-            // console.log(data)
-            // console.log(this.return_data)
         })
     },
     components: {
-        Container,
+        // Container,
         addDialog: () => import("@/components/AddEventDialog.vue")
     }
 }
@@ -134,9 +142,15 @@ export default {
 
 <style scoped>
 .page-container {
-    padding: 15px;
+    padding: 30px;
     height: 80vh;
     direction: "vertical";
+    display: flex;
+}
+
+.leftside {
+    display: flex;
+
 }
 
 .timeline-div {
@@ -146,7 +160,9 @@ export default {
 
 .selecter-div {
     height: auto;
+    width: 400px;
     padding: 10px;
+    margin-left: 80px;
 }
 
 .addEvent-div {

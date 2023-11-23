@@ -1,24 +1,40 @@
 <template>
-    <Container class="page-container">
+    <div class="page-container">
 
-        <div class="block">
-            <span class="demonstration">选择查看日期</span>
+        <div class="leftside">
 
-            <el-date-picker v-model="date_range" type="daterange" range-separator="至" start-placeholder="开始日期"
-                end-placeholder="结束日期" @change="getStatistic">
-            </el-date-picker>
+            <el-card class="selector-card" shadow="always">
+                <h4>选择查看日期段</h4>
+                <div >
+                    <el-date-picker v-model="date_range" type="daterange" range-separator="至" start-placeholder="开始日期"
+                        end-placeholder="结束日期" @change="getStatistic">
+                    </el-date-picker>
+                </div>
+            </el-card>
+
+            <el-card shadow="always">
+                <div class="histogram-div" align="center">
+                    <h3>各分类的时间分布</h3>
+                    <div id="histogram" style="width: 600px;height:400px;"></div>
+                </div>
+            </el-card>
+
+
         </div>
 
-        <div id="histogram" style="width: 600px;height:400px;"></div>
-        <div id="NestedPies" style="width: 1000px;height:800px;"></div>
-    </Container>
+
+        <div class="NestedPies-div">
+            <div id="NestedPies" style="width: 1000px;height:800px;"></div>
+        </div>
+
+    </div>
 </template>
 
 <script>
 import * as echarts from 'echarts'
 import { getClsStatistic } from '../api/statistic'
 import { getEvtStatistic } from '../api/statistic'
-import { Container } from 'element-ui';
+// import { Container } from 'element-ui';
 
 export default {
     data() {
@@ -33,7 +49,7 @@ export default {
         getStatistic() {
             let startTimeSTR = this.date_range[0].getFullYear() + "-" + ('0' + (this.date_range[0].getMonth() + 1)).slice(-2) + "-" + ('0' + this.date_range[0].getDate()).slice(-2);
             let overTimeSTR = this.date_range[1].getFullYear() + "-" + ('0' + (this.date_range[1].getMonth() + 1)).slice(-2) + "-" + ('0' + this.date_range[1].getDate()).slice(-2);
-            this.getchart(startTimeSTR,overTimeSTR)
+            this.getchart(startTimeSTR, overTimeSTR)
         },
         getchart(startTime, overTime) {
 
@@ -74,9 +90,6 @@ export default {
 
                 //设置柱状图
                 window.histogram.setOption({
-                    title: {
-                        text: '各分类下的时间分布'
-                    },
                     tooltip: {
 
                     },
@@ -196,9 +209,9 @@ export default {
 
         this.getchart("2023-10-21", "2023-10-21")
     },
-    components: {
-        Container
-    }
+    // components: {
+    //     Container
+    // }
 }
 </script>
 
@@ -208,6 +221,16 @@ export default {
     height: auto;
     width: auto;
     padding: 20px;
+    display: flex;
 }
+
+.selector-card {
+    height: 200px;
+    width: auto;
+    display: grid;
+
+}
+
+
 </style>
   

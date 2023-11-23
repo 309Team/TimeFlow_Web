@@ -69,7 +69,7 @@
                 </div>
                 <el-card v-for="item in drawer_data" :key="item.id" :index="item.id" class="drawer-card">
                     <el-descriptions :title="item.name" direction="vertical" :column="3" border>
-                        <el-descriptions-item label="用户名">{{ item.name }}</el-descriptions-item>
+                        <el-descriptions-item label="名称">{{ item.name }}</el-descriptions-item>
                         <el-descriptions-item label="开始时间">{{ item.startTime.slice(0, 9) }} {{ item.startTime.slice(11, 19)
                         }}</el-descriptions-item>
                         <el-descriptions-item label="结束时间">{{ item.overTime.slice(0, 9) }} {{ item.startTime.slice(11, 19)
@@ -88,6 +88,7 @@
 <script>
 import { getClass, addClass, deleteClass, updataClass } from '../api/classification'
 import { listClass } from '../api/classification'
+import ElementUI from 'element-ui'
 export default {
     data() {
         return {
@@ -105,12 +106,9 @@ export default {
             },
             // 表单是否打开
             dialogVisible: false,
-
-            // return_Data: [],
+            // editDialog
             // 列表数据
-            tableData: [
-            ],
-
+            tableData: [],
 
             // 打开表单:新建0,编辑1
             modalType: 0,
@@ -164,11 +162,19 @@ export default {
             this.$refs.form.validate((valid) => {
                 // 符合校验
                 if (valid) {
+                    console.log(this.form);
                     // 提交数据
                     if (this.modalType === 0) {
+                        // console.log(this.form)
                         addClass(this.form).then(() => {
                             this.getList()
                         })
+
+                        ElementUI.Message({
+                            type: 'success',
+                            message: '添加成功!'
+                        })
+
                     } else {
                         updataClass(this.form).then(() => {
                             this.getList()
@@ -194,7 +200,7 @@ export default {
             }).then(() => {
                 // 删除操作:
                 deleteClass(index.id).then(() => {
-                    this.$message({
+                    ElementUI.Message({
                         type: 'success',
                         message: '删除成功!'
                     })
@@ -210,7 +216,7 @@ export default {
                 // });
             }).catch(() => {
                 // 点击取消:不删除
-                this.$message({
+                ElementUI.Message({
                     type: 'info',
                     message: '已取消删除'
                 });
@@ -235,7 +241,11 @@ export default {
             this.drawer = true
 
             console.log(this.drawer_data)
+        },
+        manageClass() {
+
         }
+
     },
     mounted() {
         this.getList()

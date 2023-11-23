@@ -23,6 +23,7 @@
 <script>
 // import Cookie from 'js-cookie'
 import { LoginRequest } from '../api/Login_Register'
+import ElementUI from 'element-ui';
 // import http from '@/utils/request'
 export default {
   data() {
@@ -66,7 +67,7 @@ export default {
           // 后台请求异步，必须拿到token响应数据才能跳转
           this.$router.push('/home')
         } else {
-          this.$message({
+          ElementUI.Message({
             showClose: true,
             message: '账号或密码错误',
             type: 'error'
