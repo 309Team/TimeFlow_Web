@@ -1,7 +1,6 @@
 .el-button--primary {
-	background-color: #67a2ab;
+	background-color: #0052d9;
 	border-radius: 4px;
-	font-size: 16px;
 	border: 0;
 }
 
@@ -19,15 +18,15 @@
 		margin: 0 !important;
 
 		.number {
-			color: #3d66e4 !important;
+			color: #0052d9 !important;
 			border-left: 1px solid #dfe8eb;
 			border-right: 1px solid #dfe8eb;
 			background-color: #fafafa !important;
 
 			&.active {
 				color: #fff !important;
-				background-color: #3d66e4 !important;
-				border: 1px solid #3d66e4 !important;
+				background-color: #0052d9 !important;
+				border: 1px solid #0052d9 !important;
 			}
 		}
 	}
@@ -46,4 +45,9 @@
 	width: 16px;
 	height: 16px;
 	border-radius: 0;
+}
+
+/* 修改开启状态的颜色 */
+.el-switch__core input:checked+.el-switch__button {
+	background-color: #0052d9;
 }

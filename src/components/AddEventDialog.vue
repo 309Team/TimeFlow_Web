@@ -7,6 +7,13 @@
             <el-form-item label="事项名称：" :label-width="formLabelWidth">
               <el-input v-model="name" autocomplete="off"></el-input>
             </el-form-item>
+            <el-form-item label="事项分类：" :label-width="formLabelWidth">
+              <t-select-input :value="value" :min-collapsed-num="2" :popup-props="{ overlayInnerStyle: { padding: '6px' } }" placeholder="请选择" clearable multiple @tag-change="onTagChange">
+                <template #panel>
+                  <t-checkbox-group :value="checkboxValue" :options="options" class="panel-options-collapsed-items" @change="onCheckedChange" />
+                </template>
+              </t-select-input>
+            </el-form-item>
             <el-form-item label="事项备注：" :label-width="formLabelWidth">
               <el-input v-model="text"></el-input>
             </el-form-item>
@@ -74,6 +81,8 @@
 <script>
 import { PostLe, PostTe, PostMe } from '../api/event';
 import ElementUI from 'element-ui';
+import { getClass, addClassToEvent } from '@/api/classification'
+
 export default {
   name: 'addEventDialog',
   data() {
@@ -89,6 +98,9 @@ export default {
       completed: true,
       formLabelWidth: '120px',
       activeName: 'timeEvent',
+
+      options: [],
+      value: []
     };
   },
   computed: {
@@ -99,7 +111,16 @@ export default {
       set(value) {
         this.$emit("update:addDialogVisible", value)
       }
-    }
+    },
+    checkboxValue() {
+      const arr = [];
+      const list = this.value;
+      // 此处不使用 forEach，减少函数迭代
+      for (let i = 0, len = list.length; i < len; i++) {
+        list[i].value && arr.push(list[i].value);
+      }
+      return arr;
+    },
   },
   props: {
     addDialogVisible: {
@@ -114,6 +135,7 @@ export default {
   watch: {
     addDialogVisible: {
       handler() {
+        this.getClassList()
         this.name = '';
         this.text = '';
         this.overTime = '';
@@ -126,6 +148,51 @@ export default {
     }
   },
   methods: {
+    getClassList() {
+      getClass().then(({ data }) => {
+        if (data.code !== 0) {
+          ElementUI.Message({
+            showClose: false,
+            message: '请输入事项名',
+            type: 'error'
+          })
+        } else {
+          this.options = [{ label: 'Check All', checkAll: true }]
+          for (let i = 0; i < data.data.length; ++i) {
+            this.options.push({ label: data.data[i].name, value: data.data[i].id })
+          }
+        }
+      })
+    },
+    onCheckedChange(val, { current, type }) {
+      // current 不存在，则表示操作全选
+      if (!current) {
+        this.value = type === 'check' ? this.options.slice(1) : [];
+        return;
+      }
+      // 普通操作
+      if (type === 'check') {
+        const option = this.options.find((t) => t.value === current);
+        this.value.push(option);
+      } else {
+        this.value = this.value.filter((v) => v.value !== current);
+      }
+    },
+    onTagChange(currentTags, context) {
+      console.log(currentTags, context);
+      const { trigger, index, item } = context;
+      if (trigger === 'clear') {
+        this.value = [];
+      }
+      if (['tag-remove', 'backspace'].includes(trigger)) {
+        this.value.splice(index, 1);
+      }
+      if (trigger === 'enter') {
+        const current = { label: item, value: item };
+        this.value.push(current);
+        this.options = this.options.concat(current);
+      }
+    },
 
     timeConvert(date) {
       return new Date(date.setHours(date.getHours() + 8))
@@ -141,7 +208,7 @@ export default {
     OnSubmit() {
       if (this.name === '') {
         ElementUI.Message({
-          showClose: true,
+          showClose: false,
           message: '请输入事项名',
           type: 'error'
         })
@@ -198,20 +265,29 @@ export default {
         setInViewPage: this.setInViewPage,
         completed: this.completed,
       }
-      console.log(data1);
       PostTe(data1).then(({ data }) => {
         if (data.code !== 0) {
           ElementUI.Message({
-            showClose: true,
+            showClose: false,
             message: data.msg,
             type: 'error'
           });
         } else {
           ElementUI.Message({
-            showClose: true,
+            showClose: false,
             message: '添加成功',
             type: 'success'
           });
+          const addClassData = { id: data.data.id, list: this.checkboxValue }
+          addClassToEvent(addClassData).then(({ data }) => {
+            if (data.code !== 0) {
+              ElementUI.Message({
+                showClose: false,
+                message: '添加分类失败',
+                type: 'error'
+              });
+            }
+          })
           this.visible = false
           this.$emit("updateData")
         }
@@ -273,5 +349,15 @@ export default {
       })
     }
   }
+
 };
 </script>
+<style lang="less" scoped>
+.panel-options-collapsed-items {
+  width: 100%;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+</style>
