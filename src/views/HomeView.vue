@@ -315,6 +315,7 @@ export default {
     },
 
     updateAll() {
+      this.nowTime = new Date()
       this.getNowLabelEvent(this.nowTime)
       this.getNowMomentEvent(this.nowTime)
       this.getNowTimeEvent(this.nowTime)
