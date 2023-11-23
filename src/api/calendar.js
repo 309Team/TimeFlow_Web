@@ -27,5 +27,5 @@ export const GetYearMomentEvent = (data) => {
 
 // 获取当年每一月的时段事项数
 export const GetYearTimeEvent = (data) => {
-  return http.get('/event/me/year/' + data, { headers: { 'Authorization': localStorage.getItem('token') } })
+  return http.get('/event/te/year/' + data, { headers: { 'Authorization': localStorage.getItem('token') } })
 }
