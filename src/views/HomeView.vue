@@ -15,7 +15,7 @@
                 <h3 v-else-if="nowTime.getHours() >= 18 && nowTime.getHours() < 23">晚上好！</h3>
                 <h3 v-else>夜深了。</h3>
                 <br>
-                <h4 v-if="TERunning != 0"> 当前有{{TERunning}}项事项正在进行</h4>
+                <h4 v-if="TERunning != 0 || TEDisstart !=0 || MEDisstart !=0"> 当前有{{TERunning}}项事项正在进行,有{{TEDisstart+MEDisstart}}项事项未开始</h4>
                 <h4 v-else>所有事项都忙完啦，可以休息一下了！</h4>
               </div>
             </el-carousel-item>
@@ -59,7 +59,7 @@
 import { GetTe, GetMe, GetLe } from '@/api/event';
 import { formatDate, formatTimeHHMM } from '@/utils/dateFormat';
 import ElementUI from 'element-ui';
-import { ErrorCircleFilledIcon, CheckCircleFilledIcon, CloseCircleFilledIcon, InfoCircleFilledIcon } from 'tdesign-icons-vue';
+import { ErrorCircleFilledIcon, CheckCircleFilledIcon, CloseCircleFilledIcon, InfoCircleFilledIcon,TimeFilledIcon } from 'tdesign-icons-vue';
 export default {
   components: {
     addDialog: () => import("@/components/AddEventDialog.vue"),
@@ -86,7 +86,8 @@ export default {
       TENumber: 0,
       TERunning: 0,
       TEFinish: 0,
-
+      TEDisstart:0,
+      MEDisstart:0,
       // 需要的参数
       nowTime: new Date(),
       chooseEvent: {},
@@ -120,7 +121,7 @@ export default {
             const statusNameListMap = {
               0: { label: '已完成', theme: 'success', icon: <CheckCircleFilledIcon /> },
               1: { label: '进行中', theme: 'danger', icon: <CloseCircleFilledIcon /> },
-              2: { label: '未开始', theme: 'warning', icon: <ErrorCircleFilledIcon /> },
+              2: { label: '未开始', theme: 'warning', icon: <TimeFilledIcon /> },
               3: { label: '已结束', theme: 'success', icon: <InfoCircleFilledIcon /> },
             };
             return (
@@ -144,8 +145,8 @@ export default {
           cell: (h, { row }) => {
             const statusNameListMap = {
               0: { label: '已完成', theme: 'success', icon: <CheckCircleFilledIcon /> },
-              1: { label: '已过时间', theme: 'danger', icon: <CloseCircleFilledIcon /> },
-              2: { label: '未到时间', theme: 'warning', icon: <ErrorCircleFilledIcon /> },
+              1: { label: '已过期', theme: 'danger', icon: <ErrorCircleFilledIcon /> },
+              2: { label: '未到时', theme: 'warning', icon: <TimeFilledIcon /> },
             };
             return (
               <t-tag shape="round" theme={statusNameListMap[row.status].theme} variant="light-outline">
@@ -166,7 +167,7 @@ export default {
           cell: (h, { row }) => {
             const statusNameListMap = {
               0: { label: '已完成', theme: 'success', icon: <CheckCircleFilledIcon /> },
-              1: { label: '未完成', theme: 'danger', icon: <CloseCircleFilledIcon /> },
+              1: { label: '未完成', theme: 'danger', icon: <ErrorCircleFilledIcon /> },
             };
             return (
               <t-tag shape="round" theme={statusNameListMap[row.status].theme} variant="light-outline">
@@ -258,8 +259,10 @@ export default {
         if (this.todayTimeEventList[item].completed) { // 已完成
           status = 0
         } else { // 未开始
-          if (new Date(this.todayTimeEventList[item].startTime) > this.nowTime)
+          if (new Date(this.todayTimeEventList[item].startTime) > this.nowTime){
             status = 2
+            this.TEDisstart +=1
+          }
           else if (new Date(this.todayTimeEventList[item].overTime) < this.nowTime) // 已结束
             status = 3
           else {
@@ -280,9 +283,11 @@ export default {
         itemTime = new Date(this.todayMomentEventList[item].deadline)
         if (this.todayMomentEventList[item].completed) { // 已完成
           status = 0
-        } else { // 未开始
-          if (itemTime > this.nowTime)
-            status = 2
+        } else { // 未完成
+          if (itemTime > this.nowTime){
+              status = 2
+              this.MEDisstart +=1
+          }
           else
             status = 1
         }
