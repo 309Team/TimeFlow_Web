@@ -109,8 +109,8 @@ export default {
         id: this.id,
         name: this.name,
         text: this.text,
-        startTime: this.timeConvert(this.startTime),
-        overTime: this.timeConvert(this.overTime),
+        startTime: this.timeConvert(new Date(this.startTime)),
+        overTime: this.timeConvert(new Date(this.overTime)),
         setInViewPage: this.setInViewPage,
         completed: this.completed,
       }
