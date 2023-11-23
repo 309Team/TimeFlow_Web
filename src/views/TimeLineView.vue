@@ -1,7 +1,9 @@
 <template>
     <container class="page-container">
 
+        <!-- 时间轴的格子 -->
         <div class="timeline-div">
+
             <div v-if="return_data.length == 0">
                 今天没有事项
                 <!-- {{ return_data }} -->
@@ -18,24 +20,28 @@
 
                 </el-timeline-item>
             </el-timeline>
+        </div>
 
+        <!-- 抽屉的格子 -->
+        <div>
             <el-drawer v-model="drawer_data" :title="`${drawer_data.name}`" :visible.sync="drawer">
 
-                <Container class="drawer-div-startTime">
+                <el-card shadow="hover" class="drawer-card-startTime">
                     开始时间为： {{ drawer_data.startTime }}
-                </Container>
+                </el-card>
 
-                <Container class="drawer-div-overTime">
+                <el-card shadow="hover" class="drawer-card-overTime">
                     结束时间为：{{ drawer_data.overTime }}
-                </Container>
+                </el-card>
 
-                <Container class="drawer-div-text">
+                <el-card shadow="hover" class="drawer-card-text">
                     注释信息为： {{ drawer_data.text }}
-                </Container>
+                </el-card>
 
             </el-drawer>
         </div>
 
+        <!-- 日期选择器的格子 -->
         <div class="selecter-div">
             <div class="block">
                 <!-- <span class="demonstration">使用 value-format</span>
@@ -45,6 +51,8 @@
                 </el-date-picker>
             </div>
         </div>
+
+
 
         <div class="addEvent-div">
             <addDialog :addDialogVisible.sync="addDialogVisible"></addDialog>
@@ -91,13 +99,13 @@ export default {
             this.drawer_data.completed = item.completed
 
             this.drawer = true
-            console.log(this.drawer_data)
+            // console.log(this.drawer_data)
         },
         getTE() {
             // alert(this.selecte_date)
             GetDayTEvent(this.selecte_date).then((data) => {
                 this.return_data = data.data.data
-                console.log(this.return_data)
+                // console.log(this.return_data)
             })
         },
         open() {
@@ -114,7 +122,7 @@ export default {
             this.return_data = data.data.data
             // this.return_data.push("drawer",false)
             // console.log(data)
-            console.log(this.return_data)
+            // console.log(this.return_data)
         })
     },
     components: {
@@ -146,21 +154,19 @@ export default {
     width: 110px;
 }
 
-.drawer-div-startTime {
-    height: 50px;
-    background-color: #B3C0D1;
+.drawer-card-startTime {
+    height: 100px;
     padding: 15px;
 }
 
-.drawer-div-overTime {
-    height: 50px;
-    background-color: #B3C0D1;
+.drawer-card-overTime {
+    height: 100px;
     padding: 15px;
 }
 
-.drawer-div-text {
-    height: 50px;
-    background-color: #B3C0D1;
+.drawer-card-text {
+    height: 100px;
+
     padding: 15px;
 }
 </style>

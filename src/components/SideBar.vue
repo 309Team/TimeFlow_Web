@@ -34,7 +34,7 @@
 
         <el-menu-item index="4" @click="clickItem(MenuData[4])">
             <i class="el-icon-setting"></i>
-            <span slot="title">设置</span>
+            <span slot="title">分类管理</span>
         </el-menu-item>
 
         <el-menu-item index="5" @click="clickItem(MenuData[5])">
@@ -72,8 +72,8 @@ export default {
                     name: 'statistic',
                 },
                 {
-                    path: '/setting',
-                    name: 'setting',
+                    path: '/classification',
+                    name: 'classification',
                 },
                 {
                     path: '/user',

@@ -33,9 +33,9 @@ const routes = [
 				component: () => import('../views/StatisticView.vue')
 			},
 			{
-				path: '/setting',
-				name: 'Setting',
-				component: () => import('../views/SettingView.vue')
+				path: '/classification',
+				name: 'Classification',
+				component: () => import('../views/ClassificationView.vue')
 			},
 			{
 				path: '/user',
@@ -46,12 +46,6 @@ const routes = [
 				path: '/about',
 				name: 'About',
 				component: () => import('../views/AboutView.vue')
-			},
-			{
-				//测试用
-				path: '/test',
-				name: 'Test',
-				component: () => import('../views/TestView.vue')
 			}
 		]
 	},
@@ -66,6 +60,12 @@ const routes = [
 		path: '/register',
 		name: 'Register',
 		component: () => import('../views/RegisterView.vue'),
+	},
+	{
+		//测试用
+		path: '/test',
+		name: 'Test',
+		component: () => import('../views/TestView.vue')
 	}
 ]
 
@@ -79,6 +79,9 @@ const router = new VueRouter({
 
 // 路由守卫:全局前置导航守卫
 router.beforeEach((to, from, next) => {
+
+
+
 	// 获取token
 	const token = localStorage.getItem('token')
 
@@ -93,6 +96,7 @@ router.beforeEach((to, from, next) => {
 	} else {
 		next()
 	}
+
 })
 
 export default router
