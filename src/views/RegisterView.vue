@@ -5,21 +5,23 @@
 
     <!-- prop对应rules里的键 -->
     <el-form-item label="用户名" prop="name">
-      <el-input v-model="register_form.name" autocomplete="off"></el-input>
+      <el-input v-model="register_form.name" autocomplete="off" maxlength="10"></el-input>
     </el-form-item>
 
     <el-form-item label="密码" prop="password">
-      <el-input type="password" v-model="register_form.password" autocomplete="off"></el-input>
+      <el-input type="password" v-model="register_form.password" autocomplete="off" maxlength="16"></el-input>
     </el-form-item>
 
     <el-form-item label="确认密码" prop="password2">
-      <el-input type="password" v-model="register_form.password2" autocomplete="off"></el-input>
+      <el-input type="password" v-model="register_form.password2" autocomplete="off" maxlength="16"></el-input>
     </el-form-item>
 
     <el-form-item class="register_button">
       <el-button @click="toLogin">去登录</el-button>
       <el-button @click="submit" type="primary">注册</el-button>
     </el-form-item>
+
+    <el-alert title="用户名长度最大为10，密码长度最大为16" type="warning" :closeable="false" style="margin:10px" show-icon></el-alert>
   </el-form>
 </template>
 

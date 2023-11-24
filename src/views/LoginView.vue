@@ -5,11 +5,11 @@
     <h3 class="login_title">用户登录</h3>
 
     <!-- prop对应rules里的键 -->
-    <el-form-item label="用户名" prop="name">
+    <el-form-item label="用户名" prop="name" maxlength="10">
       <el-input v-model="login_form.name" autocomplete="off"></el-input>
     </el-form-item>
 
-    <el-form-item label="密码" prop="password">
+    <el-form-item label="密码" prop="password" maxlength="16">
       <el-input type="password" v-model="login_form.password" autocomplete="off"></el-input>
     </el-form-item>
 

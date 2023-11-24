@@ -18,7 +18,7 @@
       <h4>修改用户名</h4>
       <el-form :inline="true" :model="newName" @keyup.enter.native="onSubmitNewName" @submit.native.prevent>
         <el-form-item label="新用户名">
-          <el-input v-model="newName" placeholder="新用户名"></el-input>
+          <el-input v-model="newName" placeholder="新用户名" maxlength="10"></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmitNewName" round>确认修改</el-button>
@@ -33,15 +33,15 @@
       <h4>修改密码</h4>
       <el-form :inline="true" @keyup.enter.native="onSubmitNewPassWord" @submit.native.prevent>
         <el-form-item label="输入原密码">
-          <el-input v-model="oldPassWord" placeholder="请输入原密码" show-password></el-input>
+          <el-input v-model="oldPassWord" placeholder="请输入原密码" show-password maxlength="16"></el-input>
         </el-form-item>
         <br />
         <el-form-item label="输入新密码">
-          <el-input v-model="newPassWord" placeholder="请输入新密码" show-password></el-input>
+          <el-input v-model="newPassWord" placeholder="请输入新密码" show-password maxlength="16"></el-input>
         </el-form-item>
         <br />
         <el-form-item label="再次输入新密码">
-          <el-input v-model="newPassWord2" placeholder="请再次输入新密码" show-password></el-input>
+          <el-input v-model="newPassWord2" placeholder="请再次输入新密码" show-password maxlength="16"></el-input>
         </el-form-item>
         <br />
         <el-form-item>
@@ -57,7 +57,7 @@
       <h4>注销用户</h4>
       <el-form :inline="true" @submit.native.prevent>
         <el-form-item label="密码">
-          <el-input v-model="passWord" placeholder="输入密码以验证为本人操作" show-password></el-input>
+          <el-input v-model="passWord" placeholder="输入密码以验证为本人操作" show-password maxlength="16"></el-input>
         </el-form-item>
         <br />
         <el-form-item>
