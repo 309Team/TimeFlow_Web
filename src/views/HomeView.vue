@@ -93,7 +93,7 @@ export default {
     return {
 
       imgList: [
-        { id: 0, url: require('@/static/headimg/0.png') }
+        { id: 0, url: require('@/static/headimg/0.png') },
       ],
 
       // 今日一览数量

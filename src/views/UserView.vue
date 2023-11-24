@@ -4,10 +4,10 @@
     <el-tab-pane label="用户信息" name="info">
       <el-descriptions v-model="data" title="用户信息" :column="col">
         <el-descriptions-item label="用户名">{{
-          data.UserInfo.name
+            data.UserInfo.name
         }}</el-descriptions-item>
         <el-descriptions-item label="用户ID">{{
-          data.UserInfo.uid
+            data.UserInfo.uid
         }}</el-descriptions-item>
       </el-descriptions>
       <el-button type="primary" round size="mini" @click="onLogOut">退出登录</el-button>
@@ -81,7 +81,7 @@ export default {
     return {
       activeName: 'info',
       data: {
-        UserInfo: null
+        UserInfo: {}
       },
       passWord: null,
       oldPassWord: null,
