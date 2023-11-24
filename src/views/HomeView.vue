@@ -1,5 +1,5 @@
 <template>
-  <div class="cl">
+  <el-main class="main_page">
     <el-row>
       <el-col>
         <template>
@@ -7,7 +7,7 @@
           <el-carousel indicator-position="none" arrow="never" height="300px">
 
             <el-carousel-item v-for="item in imgList" :key="item.id">
-              <el-image :src='item.url'></el-image>
+              <el-image :src='item.url' fit="cover"></el-image>
               <div class="carousel-text">
                 <h3 v-if="nowTime.getHours() > 6 && nowTime.getHours() < 11">早上好！</h3>
                 <h3 v-else-if="nowTime.getHours() >= 11 && nowTime.getHours() < 14">中午好！</h3>
@@ -29,17 +29,29 @@
     <t-space direction="horizontal" class="cardsize">
       <t-card title="时段事项" header hover-shadow>
         <template>
-          <t-table @row-click="openTE" hover resizable lazyLoad row-key="index" :data="tableDataTe" :columns="columnsTE" :table-layout="tableLayout" :height="200" />
+          <t-table @row-click="openTE" hover resizable lazyLoad row-key="index" :data="tableDataTe" :columns="columnsTE" table-layout="fixed" :height="200">
+            <template #empty>
+              <span>今天没有时段事项，时间是自己的辣！</span>
+            </template>
+          </t-table>
         </template>
       </t-card>
       <t-card title="时刻事项" header hover-shadow>
         <template>
-          <t-table @row-click="openME" hover resizable lazyLoad row-key="index" :data="tableDataMe" :columns="columnsME" :table-layout="tableLayout" :height="200" />
+          <t-table @row-click="openME" hover resizable lazyLoad row-key="index" :data="tableDataMe" :columns="columnsME" table-layout="fixed" :height="200">
+            <template #empty>
+              <span>今天没有时刻事项，来定义属于自己的时刻！</span>
+            </template>
+          </t-table>
         </template>
       </t-card>
       <t-card title="标签事项" header hover-shadow>
         <template>
-          <t-table @row-click="openLE" hover resizable lazyLoad row-key="index" :data="tableDataLe" :columns="columnsLE" :table-layout="tableLayout" :height="200" />
+          <t-table @row-click="openLE" hover resizable lazyLoad row-key="index" :data="tableDataLe" :columns="columnsLE" table-layout="fixed" :height="200">
+            <template #empty>
+              <span>今天没有标签事项，是平凡又伟大的一天！</span>
+            </template>
+          </t-table>
         </template>
       </t-card>
     </t-space>
@@ -53,13 +65,13 @@
     <updateMeDialog :dataME="chooseEvent" :updateMeDialogVisible.sync="updateMeDialogVisible" @updateData="getNowMomentEvent(new Date())"></updateMeDialog>
     <updateLeDialog :dataLE="chooseEvent" :updateLeDialogVisible.sync="updateLeDialogVisible" @updateData="getNowLabelEvent(new Date())"></updateLeDialog>
 
-  </div>
+  </el-main>
 </template>
 <script>
 import { GetTe, GetMe, GetLe } from '@/api/event';
 import { formatDate, formatTimeHHMM } from '@/utils/dateFormat';
 import ElementUI from 'element-ui';
-import { ErrorCircleFilledIcon, CheckCircleFilledIcon, CloseCircleFilledIcon, InfoCircleFilledIcon,TimeFilledIcon } from 'tdesign-icons-vue';
+import { ErrorCircleFilledIcon, CheckCircleFilledIcon, InfoCircleFilledIcon, TimeFilledIcon, LoadingIcon } from 'tdesign-icons-vue';
 export default {
   components: {
     addDialog: () => import("@/components/AddEventDialog.vue"),
@@ -74,10 +86,12 @@ export default {
     this.getNowTimeEvent(today)
     this.getNowMomentEvent(today)
     this.getNowLabelEvent(today)
+
   },
 
   data() {
     return {
+
       imgList: [
         { id: 0, url: require('@/static/headimg/0.png') }
       ],
@@ -86,8 +100,8 @@ export default {
       TENumber: 0,
       TERunning: 0,
       TEFinish: 0,
-      TEDisstart:0,
-      MEDisstart:0,
+      TEDisstart: 0,
+      MEDisstart: 0,
       // 需要的参数
       nowTime: new Date(),
       chooseEvent: {},
@@ -110,7 +124,7 @@ export default {
 
       // 各事项组件行列声明
       columnsTE: [
-        { colKey: 'name', title: '事件', width: '150' },
+        { colKey: 'name', title: '事件', width: '130' },
         { colKey: 'startTime', title: '开始时间', width: '120' },
         { colKey: 'overTime', title: '结束时间', width: '120' },
         {
@@ -120,7 +134,7 @@ export default {
           cell: (h, { row }) => {
             const statusNameListMap = {
               0: { label: '已完成', theme: 'success', icon: <CheckCircleFilledIcon /> },
-              1: { label: '进行中', theme: 'danger', icon: <CloseCircleFilledIcon /> },
+              1: { label: '进行中', theme: 'danger', icon: <LoadingIcon /> },
               2: { label: '未开始', theme: 'warning', icon: <TimeFilledIcon /> },
               3: { label: '已结束', theme: 'success', icon: <InfoCircleFilledIcon /> },
             };
@@ -159,7 +173,6 @@ export default {
       ],
       columnsLE: [
         { colKey: 'name', title: '事件', width: '110' },
-        { colKey: 'text', title: '备注', width: '150' },
         {
           colKey: 'status',
           title: '状态',
@@ -196,6 +209,12 @@ export default {
       this.updateLeDialogVisible = true;
       this.chooseEvent = this.todayLabelEventList[context.index]
     },
+
+    setSize() {
+      // 通过浏览器宽度(图片宽度)计算高度
+      this.bannerHeight = 600 / 1920 * this.screenWidth;
+    },
+
 
     // 获得当天的标签事项
     getNowLabelEvent(nowDate) {
@@ -259,9 +278,9 @@ export default {
         if (this.todayTimeEventList[item].completed) { // 已完成
           status = 0
         } else { // 未开始
-          if (new Date(this.todayTimeEventList[item].startTime) > this.nowTime){
+          if (new Date(this.todayTimeEventList[item].startTime) > this.nowTime) {
             status = 2
-            this.TEDisstart +=1
+            this.TEDisstart += 1
           }
           else if (new Date(this.todayTimeEventList[item].overTime) < this.nowTime) // 已结束
             status = 3
@@ -284,9 +303,9 @@ export default {
         if (this.todayMomentEventList[item].completed) { // 已完成
           status = 0
         } else { // 未完成
-          if (itemTime > this.nowTime){
-              status = 2
-              this.MEDisstart +=1
+          if (itemTime > this.nowTime) {
+            status = 2
+            this.MEDisstart += 1
           }
           else
             status = 1
@@ -333,7 +352,7 @@ export default {
   padding: 5px 10px;
   pointer-events: none;
 }
-.cl {
+.main_page {
   width: auto;
 }
 .el-row {
@@ -383,6 +402,7 @@ export default {
   width: auto;
   height: 100%;
   margin: 10px;
+  display: flex;
 }
 
 .float-button {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <el-main>
     <div>
       <t-select v-model="mode" class="mode-select-base">
         <t-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label" />
@@ -68,6 +68,12 @@
               <el-card class="box-card">
                 <div slot="header" class="clearfix">
                   <span>{{ item.name }}</span>
+                  <span v-if="item.completed === true">
+                    <el-tag type="success" size="small" style="margin: 10px">已完成</el-tag>
+                  </span>
+                  <span v-else>
+                    <el-tag type="info" size="small" style="margin: 10px">未完成</el-tag>
+                  </span>
                   <el-popconfirm confirm-button-text='删除' confirm-button-type="danger" cancel-button-text='取消' @confirm="clickDeleteLE(item)" icon="el-icon-info" icon-color="red" title="确定删除吗？">
                     <el-button style="float: right; padding: 3px 3px" type="text" slot="reference">删除</el-button></el-popconfirm>
                   <el-button style="float: right; padding: 3px 0" type="text" @click="clickUpdateLE(item)">编辑</el-button>
@@ -82,7 +88,13 @@
               <el-card class="box-card">
                 <div slot="header" class="clearfix">
                   <span>{{ item.name }}</span>
-                  <el-tag type="danger" size="small" style="margin: 10px"> {{formatHHMM(item.deadline)}}</el-tag>
+                  <el-tag type="danger" size="small" style="margin: 10px"> {{formatHHMM(item.deadline)}} </el-tag>
+                  <span v-if="item.completed === true">
+                    <el-tag type="success" size="small">已完成</el-tag>
+                  </span>
+                  <span v-else>
+                    <el-tag type="info" size="small">未完成</el-tag>
+                  </span>
                   <el-popconfirm confirm-button-text='删除' confirm-button-type="danger" cancel-button-text='取消' @confirm="clickDeleteME(item)" icon="el-icon-info" icon-color="red" title="确定删除吗？">
                     <el-button style="float: right; padding: 3px 3px" type="text" slot="reference">删除</el-button></el-popconfirm>
                   <el-button style="float: right; padding: 3px 0" type="text" @click="clickUpdateME(item)">编辑</el-button>
@@ -121,7 +133,7 @@
         </template>
       </t-drawer>
     </div>
-  </div>
+  </el-main>
 
 </template>
 
