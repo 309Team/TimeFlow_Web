@@ -4,8 +4,7 @@
         <div class="leftside">
             <!-- 添加事项按钮 -->
             <div class="addEvent-div">
-                <addDialog :addDialogVisible.sync="addDialogVisible"></addDialog>
-                <add-event-dialog></add-event-dialog>
+                <addDialog :addDialogVisible.sync="addDialogVisible" :parentDate="new Date(selecte_date)"></addDialog>
                 <el-button round @click="open">添加事项</el-button>
             </div>
 
@@ -101,13 +100,14 @@ export default {
 
             data: {
             },
+
         };
     },
     methods: {
         showdrawer(item) {
             this.drawer_data.name = item.name
-            this.drawer_data.startTime = item.startTime.slice(0, 9)
-            this.drawer_data.overTime = item.overTime.slice(0, 9)
+            this.drawer_data.startTime = item.startTime.slice(0, 10) + ' ' + item.startTime.slice(11, 16)
+            this.drawer_data.overTime = item.overTime.slice(0, 10) + ' ' + item.startTime.slice(11, 16)
             this.drawer_data.text = item.text
             this.drawer_data.completed = item.completed
 
@@ -132,6 +132,9 @@ export default {
         GetDayTEvent(this.selecte_date).then((data) => {
             this.return_data = data.data.data
         })
+
+        console.log(this.return_data)
+
     },
     components: {
         // Container,

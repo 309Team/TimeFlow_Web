@@ -16,7 +16,9 @@
           <router-view></router-view>
         </el-main>
 
-        <el-footer class="el-footer">Footer</el-footer>
+        <el-footer class="el-footer" height="25px"> 
+          Copyright © 2022 - 2023 SCAU-TaiShan-309. All Rights Reserved. 309宿舍 版权所有
+        </el-footer>
       </el-container>
 
     </el-container>
@@ -39,14 +41,15 @@ export default {
   
 <style scoped>
 .el-header {
-  background-color: #409eff;
+  /* background-color: #409eff; */
   padding: 0;
   text-align: center;
 }
 
 .el-footer {
-  background-color: #b3c0d1;
-  color: #333;
+
+  color: #413f3f;
+  font-size: 14px;
   text-align: center;
 }
 
