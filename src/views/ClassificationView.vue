@@ -6,8 +6,7 @@
 
     <!-- 对话框:点击新增或编辑才会弹出表单 -->
     <!-- :before-close="closeDialog" 点击关闭的x之前要做的事情 -->
-    <el-dialog :title="modalType == 0 ? '新建' : '编辑'" :visible.sync="dialogVisible" width="30%"
-      :before-close="closeDialog">
+    <el-dialog :title="modalType == 0 ? '新建' : '编辑'" :visible.sync="dialogVisible" width="30%" :before-close="closeDialog">
       <!-- 表单Form -->
       <!-- ref=form:为了通过this.$refs调用组件的方法 -->
       <el-form :inline="false" :model="form" :rules="rules" ref="form" label-width="80px">
@@ -75,7 +74,6 @@
           </el-descriptions>
         </el-card>
 
-
       </el-drawer>
     </div>
   </div>
@@ -122,6 +120,16 @@ export default {
       this.tableData = []
 
       getClass().then((data) => {
+
+        if (data.data.code !== 0) {
+          ElementUI.Message({
+            showClose: false,
+            message: '获取事项信息失败',
+            type: 'error'
+          })
+          return
+        }
+
         for (let i = 0; i < data.data.data.length; i++) {
           this.tableData.push({
             name: data.data.data[i].name,
@@ -195,7 +203,17 @@ export default {
         type: 'warning'
       }).then(() => {
         // 删除操作:
-        deleteClass(index.id).then(() => {
+        deleteClass(index.id).then((res) => {
+
+          if (res.data.code !== 0) {
+            ElementUI.Message({
+              showClose: false,
+              message: '删除失败',
+              type: 'error'
+            })
+            return
+          }
+
           ElementUI.Message({
             type: 'success',
             message: '删除成功!'
@@ -258,4 +276,5 @@ export default {
 .common-table {
   height: 90%;
   position: relative;
-}</style>
+}
+</style>

@@ -176,7 +176,7 @@ export default {
       localStorage.removeItem('token')
       this.$router.push('/login')
       ElementUI.Message({
-        showClose: true,
+        showClose: false,
         message: '已退出登录',
         type: 'success'
       })

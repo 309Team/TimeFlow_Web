@@ -25,6 +25,7 @@
 
 <script>
 import { RegisterRequest } from '../api/Login_Register'
+import ElementUI from 'element-ui'
 export default {
   data() {
     return {
@@ -63,21 +64,21 @@ export default {
     },
     submit() {
       if (this.register_form.password == "") {
-        this.$message({
+        ElementUI.Message({
           showClose: true,
           message: '请输入密码',
           type: 'warning'
         });
       }
       else if (this.register_form.password2 == "") {
-        this.$message({
+        ElementUI.Message({
           showClose: true,
           message: '请输入确认密码',
           type: 'warning'
         });
       }
       else if (this.register_form.password !== this.register_form.password2) {
-        this.$message({
+        ElementUI.Message({
           showClose: true,
           message: '两次输入的密码不一致',
           type: 'error'
@@ -88,13 +89,13 @@ export default {
 
           if (data.code === 0) {
             this.$router.push('/login')
-            this.$message({
+            ElementUI.Message({
               showClose: true,
               message: '注册成功',
               type: 'success'
             });
           } else {
-            this.$message({
+            ElementUI.Message({
               showClose: true,
               message: data.msg,
               type: 'error'
@@ -142,5 +143,4 @@ export default {
     margin-left: 60px;
   }
 }
-
 </style>

@@ -18,7 +18,14 @@ http.interceptors.request.use(function(config) {
     return config;
 }, function(error) {
     // 对请求错误做什么
-    return Promise.reject(error);
+    //return Promise.reject(error);
+    console.log(error);
+    ElementUI.Message({
+        showClose: false,
+        message: '请求错误，请重试',
+        type: 'error'
+    });
+    return Promise.resolve({ data: { code: 400 } })
 })
 
 // 添加响应拦截器
@@ -34,21 +41,23 @@ http.interceptors.response.use(function(response) {
                 message: response.data.msg,
                 type: 'error'
             });
+            return Promise.resolve({ data: { code: 4 } })
         }
     }
     return response;
 }, function(error) {
     // 对响应错误做什么
 
+    console.log(error);
     if (error.message.includes('timeout')) {
         ElementUI.Message({
             showClose: true,
             message: '请求超时',
             type: 'error'
         });
-        return { data: { code: 4 } }
+        return Promise.resolve({ data: { code: 501 } })
     }
-    return Promise.reject(error);
+    return Promise.resolve({ data: { code: 500 } })
 })
 
 // 对外暴露

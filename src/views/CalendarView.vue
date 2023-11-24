@@ -350,7 +350,7 @@ export default {
         if (data.code !== 0) {
           ElementUI.Message({
             showClose: false,
-            message: '获取标签事项信息失败',
+            message: '获取年视图标签事项信息失败',
             type: 'error'
           })
         } else {
@@ -368,7 +368,7 @@ export default {
         if (data.code !== 0) {
           ElementUI.Message({
             showClose: false,
-            message: '获取标签事项信息失败',
+            message: '获取年视图时刻事项信息失败',
             type: 'error'
           })
         } else {
@@ -385,7 +385,7 @@ export default {
         if (data.code !== 0) {
           ElementUI.Message({
             showClose: false,
-            message: '获取标签事项信息失败',
+            message: '获取年视图时段事项信息失败',
             type: 'error'
           })
         } else {
